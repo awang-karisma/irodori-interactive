@@ -23,6 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 
-public/assets/**/*.pdf
-public/assets/*/audio/*
-public/assets/data.json
+.env*
+!.env.example

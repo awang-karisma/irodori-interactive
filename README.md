@@ -4,6 +4,17 @@
 $ npm install # or pnpm install or yarn install
 ```
 
+### Configuration
+
+Create a `.env` file in the root directory to configure environment variables:
+
+```bash
+# CORS proxy for asset downloads (optional)
+# If assets are served from different domains and CORS is an issue, set this to a CORS proxy URL
+# Example: VITE_CORS_PROXY=https://cors.dev/
+VITE_CORS_PROXY=
+```
+
 ### Learn more on the [Solid Website](https://solidjs.com) and come chat with us on our [Discord](https://discord.com/invite/solidjs)
 
 ## Available Scripts

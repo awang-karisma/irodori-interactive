@@ -1,74 +1,134 @@
-import { createEffect } from "solid-js";
+import { createEffect, createSignal } from "solid-js";
 import pdfjsLib from "../pdf";
 import { extractAnchors } from "../utils/extractAnchors";
 import { toViewportRect } from "../utils/viewport";
 import { drawHitBox } from "../utils/overlay";
 import { play } from "../utils/audioPlayer";
+import { getAsset, storeAsset } from "../utils/idb";
 
 export default function PdfViewer(props: {
   pdfUrl: string;
   chapter: string;
+  level: string;
+  zipUrl: string;
   mapping: any;
 }) {
   let container!: HTMLDivElement;
+  const [isLoading, setIsLoading] = createSignal(false);
+  const [error, setError] = createSignal<string | null>(null);
 
   let renderId = 0; // prevent race condition
+
+  const getPdfBlob = async (url: string): Promise<Blob> => {
+    const cacheKey = `pdf-${btoa(url)}`; // Simple cache key from URL
+    const cached = await getAsset(cacheKey);
+    if (cached) return cached;
+
+    // Use CORS proxy if configured
+    const corsProxy = import.meta.env.VITE_CORS_PROXY;
+    const fetchUrl = corsProxy ? `${corsProxy}${url}` : url;
+    const response = await fetch(fetchUrl);
+    if (!response.ok) throw new Error(`Failed to download PDF: ${response.status}`);
+    const blob = await response.blob();
+    await storeAsset(cacheKey, blob);
+    return blob;
+  };
 
   createEffect(() => {
     const currentRender = ++renderId;
 
     async function render() {
-      // clear previous content
-      container.innerHTML = "";
+      setError(null);
 
-      const pdf = await pdfjsLib
-        .getDocument(props.pdfUrl)
-        .promise;
+      // Wait for container to be visible and have dimensions
+      let containerWidth = container.clientWidth;
+      if (containerWidth <= 0) {
+        // Use requestAnimationFrame to wait for next paint
+        await new Promise(resolve => requestAnimationFrame(resolve));
+        containerWidth = container.clientWidth;
+        if (containerWidth <= 0) {
+          throw new Error(`Container not ready for rendering: width=${containerWidth}`);
+        }
+      }
 
-      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-        // cancel if new render started
-        if (currentRender !== renderId) return;
+      setIsLoading(true);
 
-        const page = await pdf.getPage(pageNum);
+      try {
+        // clear previous content
+        container.innerHTML = "";
 
-        const baseViewport = page.getViewport({ scale: 1 });
-        const scale = container.clientWidth / baseViewport.width;
+        const pdfBlob = await getPdfBlob(props.pdfUrl);
+        const pdfUrl = URL.createObjectURL(pdfBlob);
 
-        const viewport = page.getViewport({ scale });
+        try {
+          const pdf = await pdfjsLib
+            .getDocument(pdfUrl)
+            .promise;
 
-        const wrapper = document.createElement("div");
-        wrapper.className = "relative mb-4";
+          for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+            // cancel if new render started
+            if (currentRender !== renderId) return;
 
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d")!;
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
+            const page = await pdf.getPage(pageNum);
 
-        wrapper.appendChild(canvas);
-        container.appendChild(wrapper);
+            const baseViewport = page.getViewport({ scale: 1 });
 
-        await page.render({ canvasContext: ctx, viewport, canvas: canvas }).promise;
+            const scale = containerWidth / baseViewport.width;
 
-        const overlay = document.createElement("div");
-        overlay.className = "absolute left-0 top-0 w-full h-full";
+            // Ensure scale is valid
+            if (!isFinite(scale) || scale <= 0) {
+              throw new Error(`Invalid scale: ${scale}, baseViewport.width=${baseViewport.width}`);
+            }
 
-        wrapper.appendChild(overlay);
+            const viewport = page.getViewport({ scale });
 
-        const anchors = await extractAnchors(page);
-        const filteredAnchors = anchors.filter(value => {
-          const [aChapter, aNumber] = value.id?.split("-") || [0, 0]
-          return parseInt(aChapter) === parseInt(props.chapter) && parseInt(aNumber) > 0
-        })
+            // Validate viewport dimensions
+            if (!viewport.width || !viewport.height || !isFinite(viewport.width) || !isFinite(viewport.height) || viewport.width <= 0 || viewport.height <= 0) {
+              throw new Error(`Invalid canvas size: width=${viewport.width}, height=${viewport.height}`);
+            }
 
-        filteredAnchors.forEach(anchor => {
-          const rect = toViewportRect(viewport, anchor);
+            const wrapper = document.createElement("div");
+            wrapper.className = "relative mb-4";
 
-          drawHitBox(
-            overlay,
-            rect,
-            () => play(props.mapping.audio[anchor.id], anchor.id)
-          );
-        });
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d")!;
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+
+            wrapper.appendChild(canvas);
+            container.appendChild(wrapper);
+
+            await page.render({ canvasContext: ctx, viewport, canvas: canvas }).promise;
+
+            const overlay = document.createElement("div");
+            overlay.className = "absolute left-0 top-0 w-full h-full";
+
+            wrapper.appendChild(overlay);
+
+            const anchors = await extractAnchors(page);
+            const filteredAnchors = anchors.filter(value => {
+              const [aChapter, aNumber] = value.id?.split("-") || [0, 0]
+              return parseInt(aChapter) === parseInt(props.chapter) && parseInt(aNumber) > 0
+            })
+
+            filteredAnchors.forEach(anchor => {
+              const rect = toViewportRect(viewport, anchor);
+
+            drawHitBox(
+              overlay,
+              rect,
+              () => play(props.mapping.audio[anchor.id], anchor.id, props.zipUrl)
+            );
+            });
+          }
+        } finally {
+          URL.revokeObjectURL(pdfUrl);
+        }
+
+        setIsLoading(false);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load PDF');
+        setIsLoading(false);
       }
     }
 
@@ -76,9 +136,29 @@ export default function PdfViewer(props: {
   });
 
   return (
-    <div
-      ref={container}
-      class="w-full max-w-[900px] pt-15"
-    />
+    <div class="w-full max-w-[900px] pt-15">
+      {isLoading() && (
+        <div class="text-center p-5">
+          <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+          <p class="mt-2">Loading PDF...</p>
+        </div>
+      )}
+      {error() && (
+        <div class="text-center p-5 text-red-500">
+          <p>Error: {error()}</p>
+          <button
+            class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            onClick={() => window.location.reload()}
+          >
+            Retry
+          </button>
+        </div>
+      )}
+      <div
+        ref={container}
+        class="w-full"
+        style={{ display: isLoading() || error() ? 'none' : 'block' }}
+      />
+    </div>
   );
 }

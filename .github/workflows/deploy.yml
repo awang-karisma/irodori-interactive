@@ -36,9 +36,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Download assets
-        run: pnpm run download-assets
-
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v4

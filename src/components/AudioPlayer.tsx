@@ -10,7 +10,9 @@ export default function AudioPlayer() {
     title: null as string | null,
     currentTime: 0,
     duration: 0,
-    playing: false
+    playing: false,
+    loading: false,
+    error: null as string | null
   });
 
   let seekbar!: HTMLDivElement;
@@ -101,17 +103,22 @@ export default function AudioPlayer() {
     <div class="flex items-center px-5 box-border gap-2.5">
       {/* Title */}
       <div class="font-bold min-w-25">
-        {state().title ?? "No audio"}
+        {state().loading ? "Loading..." : state().error ? `Error: ${state().error}` : state().title ?? "No audio"}
       </div>
 
       {/* Controls */}
       <div class="w-15 flex gap-1">
-        <button onClick={togglePlayPause} class="p-1">
-          {state().playing ? <IconMdiPause class="w-6 h-6" /> : <IconMdiPlay class="w-6 h-6" />}
+        <button onClick={togglePlayPause} class="p-1" disabled={state().loading}>
+          {state().loading ? <div class="w-6 h-6 animate-spin rounded-full border-b-2 border-gray-500"></div> : state().playing ? <IconMdiPause class="w-6 h-6" /> : <IconMdiPlay class="w-6 h-6" />}
         </button>
-        <button onClick={handleStop} class="p-1">
+        <button onClick={handleStop} class="p-1" disabled={state().loading}>
           <IconMdiStop class="w-6 h-6" />
         </button>
+        {state().error && (
+          <button onClick={() => window.location.reload()} class="p-1 text-red-500">
+            Retry
+          </button>
+        )}
       </div>
 
       {/* Current Time */}
