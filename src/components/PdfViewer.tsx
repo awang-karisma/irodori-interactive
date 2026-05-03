@@ -49,7 +49,7 @@ export default function PdfViewer(props: {
         wrapper.appendChild(canvas);
         container.appendChild(wrapper);
 
-        await page.render({ canvasContext: ctx, viewport }).promise;
+        await page.render({ canvasContext: ctx, viewport, canvas: canvas }).promise;
 
         const overlay = document.createElement("div");
         overlay.style.position = "absolute";

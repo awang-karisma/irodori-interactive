@@ -1,6 +1,3 @@
-import { createSignal } from "solid-js";
-import AudioPlayer from "./AudioPlayer";
-
 export default function TopBar(props: { lang: string, setLang: (lang: string) => void }) {
   return (
     <div style={{
@@ -9,19 +6,25 @@ export default function TopBar(props: { lang: string, setLang: (lang: string) =>
       left: 0,
       width: "100%",
       height: "60px",
-      backgroundColor: "#f0f0f0",
+      background: "#f0f0f0",
       display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
+      "align-items": "center",
       padding: "0 20px",
-      boxSizing: "border-box",
-      zIndex: 1000
+      "box-sizing": "border-box",
+      "z-index": 1000
     }}>
-      <div style={{ display: "flex", gap: "10px" }}>
-        <button onClick={() => props.setLang("en")}>EN</button>
-        <button onClick={() => props.setLang("id")}>ID</button>
-      </div>
-      <AudioPlayer />
+      <select
+        value={props.lang}
+        onChange={(e) => props.setLang(e.target.value)}
+        style={{
+          padding: "4px 8px",
+          "border-radius": "4px",
+          border: "1px solid #ccc"
+        }}
+      >
+        <option value="en">EN</option>
+        <option value="id">ID</option>
+      </select>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { createSignal, onMount, onCleanup, Show } from "solid-js";
+import { createSignal, onMount, onCleanup } from "solid-js";
 import { subscribe, seek, stop, pause, resume } from "../utils/audioPlayer";
 
 export default function AudioPlayer() {
@@ -9,8 +9,6 @@ export default function AudioPlayer() {
     playing: false
   });
 
-  const [visible, setVisible] = createSignal(false);
-
   let seekbar!: HTMLDivElement;
   let dragging = false;
 
@@ -18,12 +16,6 @@ export default function AudioPlayer() {
   onMount(() => {
     subscribe((s) => {
       setState(s);
-
-      // show player when audio starts
-      if (s.id) setVisible(true);
-
-      // hide when stopped (id null)
-      if (!s.id) setVisible(false);
     });
 
     window.addEventListener("mousemove", onMouseMove);
@@ -98,96 +90,84 @@ export default function AudioPlayer() {
   };
 
   const handleStop = () => {
-    stop();         // reset audio
-    setVisible(false); // hide player
+    stop(); // reset audio
   };
 
   return (
-    <Show when={visible()}>
-      <div
-        style={{
-          position: "fixed",
-          bottom: "10px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "80%",
-          "max-width": "600px",
-          background: "#222",
-          color: "white",
-          padding: "12px",
-          "border-radius": "10px",
-          "box-shadow": "0 4px 12px rgba(0,0,0,0.3)",
-          "font-family": "sans-serif"
-        }}
-      >
-        {/* Title */}
-        <div style={{ "font-size": "14px", "margin-bottom": "6px" }}>
-          {state().id ?? "No audio"}
-        </div>
-
-        {/* Controls */}
-        <div style={{ display: "flex", gap: "8px", "margin-bottom": "8px" }}>
-          <button onClick={togglePlayPause}>
-            {state().playing ? "⏸ Pause" : "▶ Play"}
-          </button>
-
-          <button onClick={handleStop}>
-            ⏹ Stop
-          </button>
-        </div>
-
-        {/* Seek bar */}
-        <div
-          ref={seekbar}
-          style={{
-            height: "6px",
-            background: "#555",
-            cursor: "pointer",
-            position: "relative",
-            "border-radius": "3px"
-          }}
-          onMouseDown={onMouseDown}
-          onTouchStart={onTouchStart}
-        >
-          {/* progress */}
-          <div
-            style={{
-              width: `${progress()}%`,
-              height: "100%",
-              background: "#4caf50",
-              "border-radius": "3px"
-            }}
-          />
-
-          {/* knob */}
-          <div
-            style={{
-              position: "absolute",
-              left: `${progress()}%`,
-              top: "50%",
-              width: "12px",
-              height: "12px",
-              background: "white",
-              "border-radius": "50%",
-              transform: "translate(-50%, -50%)"
-            }}
-          />
-        </div>
-
-        {/* Time */}
-        <div
-          style={{
-            "font-size": "12px",
-            "margin-top": "6px",
-            display: "flex",
-            "justify-content": "space-between"
-          }}
-        >
-          <span>{formatTime(state().currentTime)}</span>
-          <span>{formatTime(state().duration)}</span>
-        </div>
+    <div style={{
+      position: "fixed",
+      bottom: 0,
+      left: 0,
+      width: "100%",
+      height: "60px",
+      background: "#f0f0f0",
+      display: "flex",
+      "align-items": "center",
+      padding: "0 20px",
+      "box-sizing": "border-box",
+      "z-index": 999,
+      gap: "10px"
+    }}>
+      {/* Title */}
+      <div style={{ "font-weight": "bold", "min-width": "100px" }}>
+        {state().id ?? "No audio"}
       </div>
-    </Show>
+
+      {/* Controls */}
+      <div style={{ width: "60px", display: "flex", gap: "4px" }}>
+        <button onClick={togglePlayPause}>
+          {state().playing ? "⏸" : "▶"}
+        </button>
+        <button onClick={handleStop}>
+          ⏹
+        </button>
+      </div>
+
+      {/* Current Time */}
+      <span style={{ "min-width": "40px", "text-align": "center" }}>
+        {formatTime(state().currentTime)}
+      </span>
+
+      {/* Seek bar */}
+      <div
+        ref={seekbar}
+        style={{
+          flex: 1,
+          height: "4px",
+          background: "#ccc",
+          cursor: "pointer",
+          position: "relative",
+          "border-radius": "2px"
+        }}
+        onMouseDown={onMouseDown}
+        onTouchStart={onTouchStart}
+      >
+        {/* progress */}
+        <div style={{
+          width: `${progress()}%`,
+          height: "100%",
+          background: "#4caf50",
+          "border-radius": "2px"
+        }} />
+
+        {/* knob */}
+        <div style={{
+          position: "absolute",
+          left: `${progress()}%`,
+          top: "50%",
+          width: "8px",
+          height: "8px",
+          background: "#4caf50",
+          "border-radius": "50%",
+          transform: "translate(-50%, -50%)"
+        }} />
+      </div>
+
+      {/* Duration */}
+      <span style={{ "min-width": "40px", "text-align": "center" }}>
+        {formatTime(state().duration)}
+      </span>
+    </div>
   );
 }
 
