@@ -39,11 +39,14 @@ jobs:
       - name: Download assets
         run: pnpm run download-assets
 
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v4
+
       - name: Build project
         run: pnpm run build
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
+        env:
+          BASE_URL: ${{ steps.pages.outputs.base_path }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

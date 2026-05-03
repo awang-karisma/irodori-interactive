@@ -25,4 +25,4 @@ dist-ssr
 
 public/assets/**/*.pdf
 public/assets/*/audio/*
-public/assets.json
+public/assets/data.json
