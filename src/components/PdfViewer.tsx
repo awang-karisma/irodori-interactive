@@ -55,8 +55,12 @@ export default function PdfViewer(props: {
         wrapper.appendChild(overlay);
 
         const anchors = await extractAnchors(page);
+        const filteredAnchors = anchors.filter(value => {
+          const [aChapter, aNumber] = value.id?.split("-") || [0, 0]
+          return parseInt(aChapter) === parseInt(props.chapter) && parseInt(aNumber) > 0
+        })
 
-        anchors.forEach(anchor => {
+        filteredAnchors.forEach(anchor => {
           const rect = toViewportRect(viewport, anchor);
 
           drawHitBox(
