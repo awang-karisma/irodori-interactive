@@ -5,7 +5,7 @@ import AdmZip from 'adm-zip';
 
 const urls = JSON.parse(fs.readFileSync('assets_urls.json', 'utf8'));
 
-const downloadDir = 'dist/assets';
+const downloadDir = 'public/assets';
 
 function downloadFile(url, dest) {
   return new Promise((resolve, reject) => {
@@ -57,10 +57,11 @@ async function downloadPdfs(urls, dir) {
   }));
 }
 
-async function downloadAudios(urls, dir) {
+async function downloadAudios(urls, dir, mapping) {
   for (const [chapter, url] of Object.entries(urls)) {
-    const zipPath = path.join(dir, `ch${chapter.padStart(2, '0')}.zip`);
-    const extractDir = path.join(dir, `ch${chapter.padStart(2, '0')}`);
+    const paddedChapter = chapter.padStart(2, '0');
+    const zipPath = path.join(dir, `ch${paddedChapter}.zip`);
+    const extractDir = path.join(dir, `ch${paddedChapter}`);
     console.log(`Downloading ${zipPath} from ${url}`);
     try {
       await downloadFile(url, zipPath);
@@ -68,6 +69,21 @@ async function downloadAudios(urls, dir) {
       const zip = new AdmZip(zipPath);
       zip.extractAllTo(extractDir, true);
       console.log(`Extracted to ${extractDir}`);
+
+      // Map audio files
+      const chapterNum = parseInt(chapter);
+      mapping[chapterNum].audio = {};
+      const files = fs.readdirSync(extractDir);
+      for (const file of files) {
+        if (file.endsWith('.mp3')) {
+          const match = file.match(/X_\[(\d{2}-\d{2})\]_(.+)\.mp3/);
+          if (match) {
+            const id = match[1];
+            mapping[chapterNum].audio[id] = `/assets/${dir.split('/').pop()}/ch${paddedChapter}/${file}`;
+          }
+        }
+      }
+
       fs.unlinkSync(zipPath);
     } catch (err) {
       console.error(`Error downloading/extracting ${zipPath}: ${err.message}`);
@@ -78,6 +94,11 @@ async function downloadAudios(urls, dir) {
 async function main() {
   console.log('Starting downloads...');
 
+  const mapping = {};
+  for (let i = 1; i <= 18; i++) {
+    mapping[i] = {};
+  }
+
   const promises = [];
   for (const [key, data] of Object.entries(urls)) {
     const dir = path.join(downloadDir, data.download_path);
@@ -85,25 +106,21 @@ async function main() {
     if (data.type === 'pdf') {
       promises.push(downloadPdfs(data.urls, dir));
     } else if (data.type === 'audio') {
-      promises.push(downloadAudios(data.urls, dir));
+      promises.push(downloadAudios(data.urls, dir, mapping));
     }
   }
   await Promise.all(promises);
 
-  console.log('All downloads completed.');
-
-  // Create mapping JSON
-  const mapping = {};
-  for (let i = 1; i <= 18; i++) {
-    mapping[i] = {};
-    for (const [key, data] of Object.entries(urls)) {
-      if (data.type === 'pdf') {
+  // Add pdf paths
+  for (const [key, data] of Object.entries(urls)) {
+    if (data.type === 'pdf') {
+      for (let i = 1; i <= 18; i++) {
         mapping[i][key] = `/assets/${data.download_path}/ch${i.toString().padStart(2, '0')}.pdf`;
-      } else if (data.type === 'audio') {
-        mapping[i].audio_path = `/assets/${data.download_path}/ch${i.toString().padStart(2, '0')}`;
       }
     }
   }
+
+  console.log('All downloads completed.');
 
   const languages = [];
   for (const [key, data] of Object.entries(urls)) {
@@ -112,7 +129,7 @@ async function main() {
     }
   }
 
-  fs.writeFileSync('dist/assets.json', JSON.stringify({ mapping, languages }, null, 2));
+  fs.writeFileSync('public/assets.json', JSON.stringify({ mapping, languages }, null, 2));
   console.log('Created assets.json');
 }
 

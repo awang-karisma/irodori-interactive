@@ -7,6 +7,7 @@ import IconMdiStop from 'virtual:icons/mdi/stop';
 export default function AudioPlayer() {
   const [state, setState] = createSignal({
     id: null as string | null,
+    title: null as string | null,
     currentTime: 0,
     duration: 0,
     playing: false
@@ -100,7 +101,7 @@ export default function AudioPlayer() {
     <div class="flex items-center px-5 box-border gap-2.5">
       {/* Title */}
       <div class="font-bold min-w-25">
-        {state().id ?? "No audio"}
+        {state().title ?? "No audio"}
       </div>
 
       {/* Controls */}

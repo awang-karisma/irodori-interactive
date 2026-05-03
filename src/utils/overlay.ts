@@ -1,9 +1,6 @@
-import { play } from "../utils/audioPlayer";
-
 export function drawHitBox(
   overlay: HTMLElement,
   rect: any,
-  id: string,
   onClick: () => void
 ) {
   const paddingY = 6;
@@ -33,9 +30,6 @@ export function drawHitBox(
   box.onmouseleave = () => {
     box.style.background = "rgba(0,0,255,0.15)";
   };
-
-  
-  box.onclick = () => play(id);
 
   overlay.appendChild(box);
 }

@@ -8,6 +8,7 @@ import { play } from "../utils/audioPlayer";
 export default function PdfViewer(props: {
   pdfUrl: string;
   chapter: string;
+  mapping: any;
 }) {
   let container!: HTMLDivElement;
 
@@ -61,8 +62,7 @@ export default function PdfViewer(props: {
           drawHitBox(
             overlay,
             rect,
-            anchor.id,
-            () => play(anchor.id)
+            () => play(props.mapping.audio[anchor.id], anchor.id)
           );
         });
       }

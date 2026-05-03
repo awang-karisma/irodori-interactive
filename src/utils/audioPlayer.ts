@@ -6,6 +6,7 @@ let listeners: ((state: AudioState) => void)[] = [];
 
 export type AudioState = {
   id: string | null;
+  title: string | null;
   playing: boolean;
   currentTime: number;
   duration: number;
@@ -13,6 +14,7 @@ export type AudioState = {
 
 let state: AudioState = {
   id: null,
+  title: null,
   playing: false,
   currentTime: 0,
   duration: 0
@@ -26,14 +28,15 @@ export function subscribe(fn: (s: AudioState) => void) {
   listeners.push(fn);
 }
 
-export function play(id: string) {
+export function play(url: string, title: string) {
   if (audio) {
     audio.pause();
   }
 
-  audio = new Audio(`${import.meta.env.BASE_URL}audio/${id}.mp3`);
+  audio = new Audio(url);
 
-  state.id = id;
+  state.id = url;
+  state.title = title;
   state.playing = true;
 
   audio.onloadedmetadata = () => {
@@ -49,6 +52,7 @@ export function play(id: string) {
   audio.onended = () => {
     state.playing = false;
     state.id = null;
+    state.title = null;
     state.currentTime = 0;
     notify();
   };
@@ -83,6 +87,7 @@ export function stop() {
 
   state = {
     id: null,
+    title: null,
     playing: false,
     currentTime: 0,
     duration: 0

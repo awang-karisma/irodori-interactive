@@ -23,5 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-public/audio/*
-public/pdf/*
+public/assets/**/*.pdf
+public/assets/audio/*
+public/assets.json

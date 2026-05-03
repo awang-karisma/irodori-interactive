@@ -33,14 +33,14 @@ jobs:
         with:
           version: 8
 
+      - name: Download assets
+        run: pnpm run download-assets
+
       - name: Install dependencies
         run: pnpm install
 
       - name: Build project
         run: pnpm run build
-
-      - name: Download assets
-        run: pnpm run download-assets
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

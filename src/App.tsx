@@ -34,7 +34,7 @@ export default function App() {
             <>
               <TopBar lang={lang()} setLang={setLang} chapter={chapter()} langOptions={langOptions} />
               {chapter() ? (
-                <PdfViewer pdfUrl={mapping[parseInt(chapter()!)][lang()]} chapter={chapter()!} />
+                <PdfViewer pdfUrl={mapping[parseInt(chapter()!)][lang()]} chapter={chapter()!} mapping={mapping[parseInt(chapter()!)]} />
               ) : (
                 <div class="chapter-list p-5 mt-15">
                   <h2 class="text-2xl mb-4">Select a Chapter</h2>
