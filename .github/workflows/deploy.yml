@@ -33,11 +33,11 @@ jobs:
         with:
           version: 8
 
-      - name: Download assets
-        run: pnpm run download-assets
-
       - name: Install dependencies
         run: pnpm install
+
+      - name: Download assets
+        run: pnpm run download-assets
 
       - name: Build project
         run: pnpm run build
