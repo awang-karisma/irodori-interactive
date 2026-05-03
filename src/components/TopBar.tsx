@@ -1,29 +1,17 @@
-export default function TopBar(props: { lang: string, setLang: (lang: string) => void }) {
+import AudioPlayer from "./AudioPlayer";
+
+export default function TopBar(props: { lang: string, setLang: (lang: string) => void, chapter?: string | null, langOptions: { value: string, label: string }[] }) {
   return (
-    <div style={{
-      position: "fixed",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "60px",
-      background: "#f0f0f0",
-      display: "flex",
-      "align-items": "center",
-      padding: "0 20px",
-      "box-sizing": "border-box",
-      "z-index": 1000
-    }}>
+    <div class="fixed top-0 left-0 w-full h-15 bg-gray-200 flex items-center px-5 box-border z-[1000]">
+      {props.chapter && <AudioPlayer />}
       <select
         value={props.lang}
         onChange={(e) => props.setLang(e.target.value)}
-        style={{
-          padding: "4px 8px",
-          "border-radius": "4px",
-          border: "1px solid #ccc"
-        }}
+        class="ml-auto p-2 rounded border border-gray-400 bg-white"
       >
-        <option value="en">EN</option>
-        <option value="id">ID</option>
+        {props.langOptions.map(opt => (
+          <option value={opt.value}>{opt.label}</option>
+        ))}
       </select>
     </div>
   );

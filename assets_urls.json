@@ -1,0 +1,76 @@
+{
+  "en": {
+    "display_name": "English",
+    "type": "pdf",
+    "download_path": "english",
+    "urls": {
+      "1": "https://www.irodori.jpf.go.jp/assets/data/starter/pdf/X_L01.pdf",
+      "2": "https://www.irodori.jpf.go.jp/assets/data/starter/pdf/X_L02.pdf",
+      "3": "https://www.irodori.jpf.go.jp/assets/data/starter/pdf/X_L03.pdf",
+      "4": "https://www.irodori.jpf.go.jp/assets/data/starter/pdf/X_L04.pdf",
+      "5": "https://www.irodori.jpf.go.jp/assets/data/starter/pdf/X_L05.pdf",
+      "6": "https://www.irodori.jpf.go.jp/assets/data/starter/pdf/X_L06.pdf",
+      "7": "https://www.irodori.jpf.go.jp/assets/data/starter/pdf/X_L07.pdf",
+      "8": "https://www.irodori.jpf.go.jp/assets/data/starter/pdf/X_L08.pdf",
+      "9": "https://www.irodori.jpf.go.jp/assets/data/starter/pdf/X_L09.pdf",
+      "10": "https://www.irodori.jpf.go.jp/assets/data/starter/pdf/X_L10.pdf",
+      "11": "https://www.irodori.jpf.go.jp/assets/data/starter/pdf/X_L11.pdf",
+      "12": "https://www.irodori.jpf.go.jp/assets/data/starter/pdf/X_L12.pdf",
+      "13": "https://www.irodori.jpf.go.jp/assets/data/starter/pdf/X_L13.pdf",
+      "14": "https://www.irodori.jpf.go.jp/assets/data/starter/pdf/X_L14.pdf",
+      "15": "https://www.irodori.jpf.go.jp/assets/data/starter/pdf/X_L15.pdf",
+      "16": "https://www.irodori.jpf.go.jp/assets/data/starter/pdf/X_L16.pdf",
+      "17": "https://www.irodori.jpf.go.jp/assets/data/starter/pdf/X_L17.pdf",
+      "18": "https://www.irodori.jpf.go.jp/assets/data/starter/pdf/X_L18.pdf"
+    }
+  },
+  "id": {
+    "display_name": "Indonesian",
+    "type": "pdf",
+    "download_path": "indonesian",
+    "urls": {
+      "1": "https://drive.usercontent.google.com/download?&export=download&id=1es3XBwPK4R6NHyY_An2jnr80yQFZA-Pe",
+      "2": "https://drive.usercontent.google.com/download?&export=download&id=1p9MsvHCwt1gzqVnNaYLZNkFC7PhR2q5_",
+      "3": "https://drive.usercontent.google.com/download?&export=download&id=1Ar6nCMg6tNOMj0OeVMtCoQKTm5YlFljD",
+      "4": "https://drive.usercontent.google.com/download?&export=download&id=1j9rWgmWy1bybOR57zFtzh4rSru6u46LU",
+      "5": "https://drive.usercontent.google.com/download?&export=download&id=1m7gH1tqceJ4gyf3un-XSrv6Q8H0lJTye",
+      "6": "https://drive.usercontent.google.com/download?&export=download&id=18n4legtd_cFpq3j6Oo82ILS4oj9lwuAB",
+      "7": "https://drive.usercontent.google.com/download?&export=download&id=1lmGxFlidmmp5bVIhc75wMPi77jgX81Tg",
+      "8": "https://drive.usercontent.google.com/download?&export=download&id=1O_hPNUjFU_IqxvbaERCwnlIMQLPKAqCM",
+      "9": "https://drive.usercontent.google.com/download?&export=download&id=13QWLQpMblZYN2-5PXwHWY9RqFjyNqda0",
+      "10": "https://drive.usercontent.google.com/download?&export=download&id=1bXR46C5YnmuzNPUl52oQ9XR-S0P7E2fB",
+      "11": "https://drive.usercontent.google.com/download?&export=download&id=14whtAd5tlv8iHvPkKo562UTx6xKC_r22",
+      "12": "https://drive.usercontent.google.com/download?&export=download&id=1eEyKk2sTXCn4Wv0rz1fyVHm7JDIwBK80",
+      "13": "https://drive.usercontent.google.com/download?&export=download&id=1G6oR2W1-X2tiRnQefu5XYIbPdL5wG6S-",
+      "14": "https://drive.usercontent.google.com/download?&export=download&id=1RzX7MqFYnWGyLPsn9mV1kCoj4jclkLce",
+      "15": "https://drive.usercontent.google.com/download?&export=download&id=1EOjhcAbVO3u0hAFMkyEUeFMb07DDWS0g",
+      "16": "https://drive.usercontent.google.com/download?&export=download&id=1f97WUuMoxzMOXdyhx5sLrGOQMji6jwXi",
+      "17": "https://drive.usercontent.google.com/download?&export=download&id=1ibqpmFw11KtdLV0zJ4RPrwk1aFq9mWAP",
+      "18": "https://drive.usercontent.google.com/download?&export=download&id=12Q9UOji8ccQJWA3mjl_U42n4hTcLr7Zu"
+    }
+  },
+  "audio": {
+    "type": "audio",
+    "download_path": "audio",
+    "urls": {
+      "1": "https://www.irodori.jpf.go.jp/assets/data/starter/audio/01/X_audio_L01.zip",
+      "2": "https://www.irodori.jpf.go.jp/assets/data/starter/audio/02/X_audio_L02.zip",
+      "3": "https://www.irodori.jpf.go.jp/assets/data/starter/audio/03/X_audio_L03.zip",
+      "4": "https://www.irodori.jpf.go.jp/assets/data/starter/audio/04/X_audio_L04.zip",
+      "5": "https://www.irodori.jpf.go.jp/assets/data/starter/audio/05/X_audio_L05.zip",
+      "6": "https://www.irodori.jpf.go.jp/assets/data/starter/audio/06/X_audio_L06.zip",
+      "7": "https://www.irodori.jpf.go.jp/assets/data/starter/audio/07/X_audio_L07.zip",
+      "8": "https://www.irodori.jpf.go.jp/assets/data/starter/audio/08/X_audio_L08.zip",
+      "9": "https://www.irodori.jpf.go.jp/assets/data/starter/audio/09/X_audio_L09.zip",
+      "10": "https://www.irodori.jpf.go.jp/assets/data/starter/audio/10/X_audio_L10.zip",
+      "11": "https://www.irodori.jpf.go.jp/assets/data/starter/audio/11/X_audio_L11.zip",
+      "12": "https://www.irodori.jpf.go.jp/assets/data/starter/audio/12/X_audio_L12.zip",
+      "13": "https://www.irodori.jpf.go.jp/assets/data/starter/audio/13/X_audio_L13.zip",
+      "14": "https://www.irodori.jpf.go.jp/assets/data/starter/audio/14/X_audio_L14.zip",
+      "15": "https://www.irodori.jpf.go.jp/assets/data/starter/audio/15/X_audio_L15.zip",
+      "16": "https://www.irodori.jpf.go.jp/assets/data/starter/audio/16/X_audio_L16.zip",
+      "17": "https://www.irodori.jpf.go.jp/assets/data/starter/audio/17/X_audio_L17.zip",
+      "18": "https://www.irodori.jpf.go.jp/assets/data/starter/audio/18/X_audio_L18.zip"
+    }
+  }
+}

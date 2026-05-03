@@ -1,5 +1,8 @@
 import { createSignal, onMount, onCleanup } from "solid-js";
 import { subscribe, seek, stop, pause, resume } from "../utils/audioPlayer";
+import IconMdiPlay from 'virtual:icons/mdi/play';
+import IconMdiPause from 'virtual:icons/mdi/pause';
+import IconMdiStop from 'virtual:icons/mdi/stop';
 
 export default function AudioPlayer() {
   const [state, setState] = createSignal({
@@ -94,77 +97,43 @@ export default function AudioPlayer() {
   };
 
   return (
-    <div style={{
-      position: "fixed",
-      bottom: 0,
-      left: 0,
-      width: "100%",
-      height: "60px",
-      background: "#f0f0f0",
-      display: "flex",
-      "align-items": "center",
-      padding: "0 20px",
-      "box-sizing": "border-box",
-      "z-index": 999,
-      gap: "10px"
-    }}>
+    <div class="flex items-center px-5 box-border gap-2.5">
       {/* Title */}
-      <div style={{ "font-weight": "bold", "min-width": "100px" }}>
+      <div class="font-bold min-w-25">
         {state().id ?? "No audio"}
       </div>
 
       {/* Controls */}
-      <div style={{ width: "60px", display: "flex", gap: "4px" }}>
-        <button onClick={togglePlayPause}>
-          {state().playing ? "⏸" : "▶"}
+      <div class="w-15 flex gap-1">
+        <button onClick={togglePlayPause} class="p-1">
+          {state().playing ? <IconMdiPause class="w-6 h-6" /> : <IconMdiPlay class="w-6 h-6" />}
         </button>
-        <button onClick={handleStop}>
-          ⏹
+        <button onClick={handleStop} class="p-1">
+          <IconMdiStop class="w-6 h-6" />
         </button>
       </div>
 
       {/* Current Time */}
-      <span style={{ "min-width": "40px", "text-align": "center" }}>
+      <span class="min-w-10 text-center">
         {formatTime(state().currentTime)}
       </span>
 
       {/* Seek bar */}
       <div
         ref={seekbar}
-        style={{
-          flex: 1,
-          height: "4px",
-          background: "#ccc",
-          cursor: "pointer",
-          position: "relative",
-          "border-radius": "2px"
-        }}
+        class="flex-1 h-1 bg-gray-300 cursor-pointer relative rounded"
         onMouseDown={onMouseDown}
         onTouchStart={onTouchStart}
       >
         {/* progress */}
-        <div style={{
-          width: `${progress()}%`,
-          height: "100%",
-          background: "#4caf50",
-          "border-radius": "2px"
-        }} />
+        <div class="absolute top-0 left-0 h-full bg-green-500 rounded" style={{ width: `${progress()}%` }} />
 
         {/* knob */}
-        <div style={{
-          position: "absolute",
-          left: `${progress()}%`,
-          top: "50%",
-          width: "8px",
-          height: "8px",
-          background: "#4caf50",
-          "border-radius": "50%",
-          transform: "translate(-50%, -50%)"
-        }} />
+        <div class="absolute top-1/2 w-2 h-2 bg-green-500 rounded-full transform -translate-x-1/2 -translate-y-1/2" style={{ left: `${progress()}%` }} />
       </div>
 
       {/* Duration */}
-      <span style={{ "min-width": "40px", "text-align": "center" }}>
+      <span class="min-w-10 text-center">
         {formatTime(state().duration)}
       </span>
     </div>

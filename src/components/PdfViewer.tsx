@@ -6,7 +6,7 @@ import { drawHitBox } from "../utils/overlay";
 import { play } from "../utils/audioPlayer";
 
 export default function PdfViewer(props: {
-  lang: string;
+  pdfUrl: string;
   chapter: string;
 }) {
   let container!: HTMLDivElement;
@@ -21,9 +21,7 @@ export default function PdfViewer(props: {
       container.innerHTML = "";
 
       const pdf = await pdfjsLib
-        .getDocument(
-          `${import.meta.env.BASE_URL}pdf/${props.lang}/${props.chapter}.pdf`
-        )
+        .getDocument(props.pdfUrl)
         .promise;
 
       for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
@@ -38,8 +36,7 @@ export default function PdfViewer(props: {
         const viewport = page.getViewport({ scale });
 
         const wrapper = document.createElement("div");
-        wrapper.style.position = "relative";
-        wrapper.style.marginBottom = "16px";
+        wrapper.className = "relative mb-4";
 
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d")!;
@@ -52,11 +49,7 @@ export default function PdfViewer(props: {
         await page.render({ canvasContext: ctx, viewport, canvas: canvas }).promise;
 
         const overlay = document.createElement("div");
-        overlay.style.position = "absolute";
-        overlay.style.left = "0";
-        overlay.style.top = "0";
-        overlay.style.width = "100%";
-        overlay.style.height = "100%";
+        overlay.className = "absolute left-0 top-0 w-full h-full";
 
         wrapper.appendChild(overlay);
 
@@ -81,7 +74,7 @@ export default function PdfViewer(props: {
   return (
     <div
       ref={container}
-      style={{ width: "100%", "max-width": "900px" }}
+      class="w-full max-w-[900px] pt-15"
     />
   );
 }
