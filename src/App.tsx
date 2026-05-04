@@ -1,11 +1,12 @@
 import { createResource, Show, onMount } from "solid-js";
-import { Router, Route, useParams, useLocation, useNavigate } from "@solidjs/router";
+import { Router, Route, useParams, useNavigate } from "@solidjs/router";
 import TopBar from "./components/TopBar";
 import Home from "./pages/Home";
 import Viewer from "./pages/Viewer";
 import { getPdfUrl, getAudioZipUrl, getAudioMapping } from "./utils/assetUtils";
 import { requestPersistentStorage } from "./utils/idb";
-import { getLocale, setLocale, shouldRedirect } from "./i18n/runtime";
+import { baseLocale, getLocale, isLocale, setLocale, shouldRedirect } from "./i18n/runtime";
+import { m } from "./i18n/messages";
 
 async function checkRedirect() {
 	const decision = await shouldRedirect({ url: window.location.href });
@@ -39,6 +40,13 @@ function DefaultRedirect() {
   return null;
 }
 
+function defaultLocale(currentLocale) {
+  if (isLocale(currentLocale)) {
+    return setLocale(currentLocale)
+  }
+  return setLocale(baseLocale)
+}
+
 export default function App() {
   onMount(async () => {
     checkRedirect()
@@ -61,13 +69,13 @@ export default function App() {
   return (
     <Router>
       <Show when={assetsData.state === 'pending'}>
-        <div class="text-center p-5">Loading...</div>
+        <div class="text-center p-5">{m.loading()}</div>
       </Show>
       <Show when={assetsData.state === 'errored'}>
         <div class="p-5 text-center">
-          <h2 class="text-xl font-bold mb-4">Assets URLs Not Found</h2>
-          <p>Unable to load asset URLs from assets_urls.json</p>
-          <p class="mb-4 text-xs opacity-40">Error: {assetsData.error?.message || 'Unknown error'}</p>
+          <h2 class="text-xl font-bold mb-4">{m.asset_no_url_found_title()}</h2>
+          <p>{m.asset_no_url_found_message()}</p>
+          <p class="mb-4 text-xs opacity-40">{m.error()}: {assetsData.error?.message || m.error_unknown()}</p>
         </div>
       </Show>
       <Show when={assetsData.state === 'ready'}>
@@ -84,21 +92,15 @@ function HomeRoute({ assetsData }: { assetsData: AssetsUrlsData }) {
   const params = useParams<{ lang: string }>();
   const navigate = useNavigate();
 
-  setLocale(params.lang as "en" | "id" | "kr");
-
-  const langOptions = assetsData.languages.map((lang: { id: string, name: string }) => ({ value: lang.id, label: lang.name }));
+  defaultLocale(params.lang);
 
   const handleSelectChapter = (level: string, chapter: string) => {
     navigate(`/${params.lang}/viewer/${level}/${chapter}?page=1`);
   };
 
-  const handleLangChange = (newLang: string) => {
-    navigate(`/${newLang}/home`);
-  };
-
   return (
     <>
-      <TopBar lang={params.lang} setLang={handleLangChange} chapter={null} langOptions={langOptions} />
+      <TopBar lang={params.lang} chapter={null} />
       <Home assets={assetsData.assets} onSelectChapter={handleSelectChapter} />
     </>
   );
@@ -106,21 +108,13 @@ function HomeRoute({ assetsData }: { assetsData: AssetsUrlsData }) {
 
 function ViewerRoute({ assetsData }: { assetsData: AssetsUrlsData }) {
   const params = useParams<{ lang: string; level: string; chapter: string }>();
-  const location = useLocation();
   const navigate = useNavigate();
 
-  setLocale(params.lang as "en" | "id" | "kr");
-
-  const page = () => new URLSearchParams(location.search).get('page') || '1';
+  defaultLocale(params.lang);
 
   const pdfUrl = getPdfUrl(assetsData.assets, params.level, params.lang, parseInt(params.chapter))!;
   const zipUrl = getAudioZipUrl(assetsData.assets, params.level, parseInt(params.chapter))!;
   const audioMapping = getAudioMapping(parseInt(params.chapter));
-  const langOptions = assetsData.languages.map((lang: { id: string, name: string }) => ({ value: lang.id, label: lang.name }));
-
-  const handleLangChange = (newLang: string) => {
-    navigate(`/${newLang}/viewer/${params.level}/${params.chapter}?page=${page()}`);
-  };
 
   const handleBack = () => {
     navigate(`/${params.lang}/home`);
@@ -128,7 +122,7 @@ function ViewerRoute({ assetsData }: { assetsData: AssetsUrlsData }) {
 
   return (
     <>
-      <TopBar lang={params.lang} setLang={handleLangChange} chapter={params.chapter} langOptions={langOptions} onBack={handleBack} />
+      <TopBar lang={params.lang} chapter={params.chapter} onBack={handleBack} />
       <Viewer pdfUrl={pdfUrl} chapter={params.chapter} level={params.level} zipUrl={zipUrl} mapping={{ audio: audioMapping }} />
     </>
   );

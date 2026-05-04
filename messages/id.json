@@ -1,6 +1,12 @@
 {
+  "$schema": "https://inlang.com/schema/inlang-message-format",
   "home": "Beranda",
   "back": "Kembali",
   "chapter": "Bab",
-  "language": "Bahasa"
+  "language": "Bahasa",
+  "loading": "Memuat...",
+  "error": "Kesalahan",
+  "error_unknown": "Kesalahan tidak dikenal",
+  "asset_no_url_found_title": "URL Aset Tidak Ditemukan",
+  "asset_no_url_found_message": "Tidak dapat memuat URL aset dari assets_urls.json"
 }

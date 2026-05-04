@@ -1,4 +1,11 @@
-export default function TopBar(props: { lang: string, setLang: (lang: string) => void, chapter?: string | null, langOptions: { value: string, label: string }[], onBack?: () => void }) {
+import { baseLocale, isLocale, locales, setLocale } from "../i18n/runtime";
+
+const handleLangChange = (lang: string) => {
+  if (isLocale(lang)) return setLocale(lang)
+  return setLocale(baseLocale)
+}
+export default function TopBar(props: { lang: string, chapter?: string | null, onBack?: () => void }) {
+  const langOptions = locales
   return (
     <div class="fixed top-0 left-0 w-full h-15 bg-gray-200 flex items-center px-5 box-border z-[1000]">
       {props.chapter ? (
@@ -9,11 +16,11 @@ export default function TopBar(props: { lang: string, setLang: (lang: string) =>
       ) : null}
       <select
         value={props.lang}
-        onChange={(e) => props.setLang(e.target.value)}
+        onChange={(e) => handleLangChange(e.target.value)}
         class="ml-auto p-2 rounded border border-gray-400 bg-white"
       >
-        {props.langOptions.map(opt => (
-          <option value={opt.value}>{opt.label}</option>
+        {langOptions.map(opt => (
+          <option value={opt}>{opt}</option>
         ))}
       </select>
     </div>

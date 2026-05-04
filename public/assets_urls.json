@@ -9,7 +9,7 @@
       "name": "Indonesian"
     },
     {
-      "id": "kr",
+      "id": "ko",
       "name": "Korean"
     }
   ],
@@ -69,10 +69,10 @@
       ]
     },
     {
-      "id": "kr-starter",
+      "id": "ko-starter",
       "type": "pdf",
       "name": "입문",
-      "lang": "kr",
+      "lang": "ko",
       "level": "starter",
       "urls": [
         "https://www.jpf.or.kr/irodori/sData/pdf/starter/X_L01.pdf",
@@ -150,10 +150,10 @@
       ]
     },
     {
-      "id": "kr-elementary1",
+      "id": "ko-elementary1",
       "type": "pdf",
       "name": "초급1",
-      "lang": "kr",
+      "lang": "ko",
       "level": "elementary1",
       "urls": [
         "https://www.jpf.or.kr/irodori/sData/pdf/elementary01/Y_L01.pdf",

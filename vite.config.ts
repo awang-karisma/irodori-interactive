@@ -15,7 +15,7 @@ export default defineConfig({
         "localStorage",
         "globalVariable",
         "baseLocale"
-      ]
+      ],
     }),
     tailwindcss(),
     solid(),

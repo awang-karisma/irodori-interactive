@@ -1,6 +1,12 @@
 {
+  "$schema": "https://inlang.com/schema/inlang-message-format",
   "home": "Home",
   "back": "Back",
   "chapter": "Chapter",
-  "language": "Language"
+  "language": "Language",
+  "loading": "Loading...",
+  "error": "Error",
+  "error_unknown": "Unknown error",
+  "asset_no_url_found_title": "Assets URLs Not Found",
+  "asset_no_url_found_message": "Unable to load asset URLs from assets_urls.json"
 }
