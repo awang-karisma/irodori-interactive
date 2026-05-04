@@ -5,6 +5,7 @@ import { toViewportRect } from "../utils/viewport";
 import { drawHitBox } from "../utils/overlay";
 import { play } from "../utils/audioPlayer";
 import { getAsset, storeAsset } from "../utils/idb";
+import { m } from "../i18n/messages";
 
 export default function PdfViewer(props: {
   pdfUrl: string;
@@ -26,7 +27,7 @@ export default function PdfViewer(props: {
 
     // Use CORS proxy if configured
     const corsProxy = import.meta.env.VITE_CORS_PROXY;
-    const fetchUrl = corsProxy ? `${corsProxy}${url}` : url;
+    const fetchUrl = corsProxy ? `${corsProxy}${encodeURIComponent(url)}` : url;
     const response = await fetch(fetchUrl);
     if (!response.ok) throw new Error(`Failed to download PDF: ${response.status}`);
     const blob = await response.blob();
@@ -140,17 +141,17 @@ export default function PdfViewer(props: {
       {isLoading() && (
         <div class="text-center p-5">
           <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-          <p class="mt-2">Loading PDF...</p>
+          <p class="mt-2">{m.loading_pdf()}</p>
         </div>
       )}
       {error() && (
         <div class="text-center p-5 text-red-500">
-          <p>Error: {error()}</p>
+          <p>{m.error()}: {error()}</p>
           <button
             class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             onClick={() => window.location.reload()}
           >
-            Retry
+            {m.retry()}
           </button>
         </div>
       )}

@@ -47,7 +47,7 @@ const getAudioBlobUrl = async (zipUrl: string, filename: string): Promise<string
   if (!zipBlob) {
     // Use CORS proxy if configured
     const corsProxy = import.meta.env.VITE_CORS_PROXY;
-    const fetchUrl = corsProxy ? `${corsProxy}${zipUrl}` : zipUrl;
+    const fetchUrl = corsProxy ? `${corsProxy}${encodeURIComponent(zipUrl)}` : zipUrl;
     const response = await fetch(fetchUrl);
     if (!response.ok) throw new Error(`Failed to download audio zip: ${response.status}`);
     zipBlob = await response.blob();

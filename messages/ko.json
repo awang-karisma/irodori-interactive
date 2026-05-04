@@ -1,0 +1,15 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"home": "집",
+	"back": "뒤쪽에",
+	"chapter": "장",
+	"language": "언어",
+	"loading": "로딩 중...",
+	"error": "오류",
+	"error_unknown": "알 수 없는 오류",
+	"loading_pdf": "PDF 파일을 불러오는 중...",
+	"retry": "다시 해 보다",
+	"language_name": "한국어",
+	"asset_no_url_found_title": "자산 URL을 찾을 수 없습니다",
+	"asset_no_url_found_message": "assets_urls.json에서 자산 URL을 로드할 수 없습니다."
+}

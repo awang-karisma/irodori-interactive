@@ -7,6 +7,9 @@
   "loading": "Memuat...",
   "error": "Kesalahan",
   "error_unknown": "Kesalahan tidak dikenal",
+  "loading_pdf": "Sedang memuat PDF...",
+  "retry": "Mencoba kembali",
+  "language_name": "Bahasa Indonesia",
   "asset_no_url_found_title": "URL Aset Tidak Ditemukan",
   "asset_no_url_found_message": "Tidak dapat memuat URL aset dari assets_urls.json"
 }

@@ -4,9 +4,12 @@
   "back": "Back",
   "chapter": "Chapter",
   "language": "Language",
-  "loading": "Loading...",
+  "asset_no_url_found_title": "Assets URLs Not Found",
+  "asset_no_url_found_message": "Unable to load asset URLs from assets_urls.json",
   "error": "Error",
   "error_unknown": "Unknown error",
-  "asset_no_url_found_title": "Assets URLs Not Found",
-  "asset_no_url_found_message": "Unable to load asset URLs from assets_urls.json"
+  "loading": "Loading...",
+  "loading_pdf": "Loading PDF...",
+  "retry": "Retry",
+  "language_name": "English"
 }
