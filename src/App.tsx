@@ -39,7 +39,8 @@ export default function App() {
   });
 
   const [assetsData] = createResource(async () => {
-    const res = await fetch(import.meta.env.BASE_URL + 'assets_urls.json');
+    const url = new URL("/assets_urls.json", import.meta.url).href
+    const res = await fetch(url);
     if (!res.ok) throw new Error('Assets URLs not found');
     return await res.json();
   });
