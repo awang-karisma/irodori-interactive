@@ -44,6 +44,7 @@ jobs:
         run: pnpm run build
         env:
           BASE_URL: ${{ steps.pages.outputs.base_path }}
+          VITE_CORS_PROXY: ${{ vars.VITE_CORS_PROXY }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

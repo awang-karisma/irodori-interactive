@@ -67,7 +67,7 @@ export default function App() {
   });
 
   return (
-    <Router>
+    <Router base={import.meta.env.BASE_URL === '/' ? '/' : import.meta.env.BASE_URL.replace(/\/$/, '')}>
       <Show when={assetsData.state === 'pending'}>
         <div class="text-center p-5">{m.loading()}</div>
       </Show>
