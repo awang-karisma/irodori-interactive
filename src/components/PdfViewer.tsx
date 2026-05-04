@@ -136,7 +136,7 @@ export default function PdfViewer(props: {
   });
 
   return (
-    <div class="w-full max-w-[900px] pt-15">
+    <div class="w-full pt-15">
       {isLoading() && (
         <div class="text-center p-5">
           <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>

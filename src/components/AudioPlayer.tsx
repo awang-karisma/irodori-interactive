@@ -100,7 +100,7 @@ export default function AudioPlayer() {
   };
 
   return (
-    <div class="flex items-center px-5 box-border gap-2.5">
+    <div class="fixed bottom-0 left-0 w-full h-15 bg-gray-200 flex items-center px-5 box-border z-[1000] gap-2.5">
       {/* Title */}
       <div class="font-bold min-w-25">
         {state().loading ? "Loading..." : state().error ? `Error: ${state().error}` : state().title ?? "No audio"}
