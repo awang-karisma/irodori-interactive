@@ -22,7 +22,7 @@ export default function TopBar(props: { lang: string, chapter?: string | null, o
         class="ml-auto p-2 rounded border border-gray-400 bg-white"
       >
         {langOptions.map(opt => (
-          <option value={opt}>{m.language_name(null, { locale: opt })}</option>
+          <option value={opt}>{ m.language_name({}, { locale: opt })}</option>
         ))}
       </select>
     </div>

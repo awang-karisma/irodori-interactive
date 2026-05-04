@@ -40,7 +40,7 @@ function DefaultRedirect() {
   return null;
 }
 
-function defaultLocale(currentLocale) {
+const defaultLocale = (currentLocale: string) => {
   if (isLocale(currentLocale)) {
     return setLocale(currentLocale)
   }
