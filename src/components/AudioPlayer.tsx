@@ -34,6 +34,7 @@ export default function AudioPlayer() {
   });
 
   onCleanup(() => {
+    stop();
     window.removeEventListener("mousemove", onMouseMove);
     window.removeEventListener("mouseup", onMouseUp);
 
