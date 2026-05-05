@@ -225,6 +225,142 @@
         "https://www.irodori.jpf.go.jp/assets/data/elementary01/audio/17/Y_audio_L17.zip",
         "https://www.irodori.jpf.go.jp/assets/data/elementary01/audio/18/Y_audio_L18.zip"
       ]
+    },
+
+    {
+      "id": "en-elementary2",
+      "type": "pdf",
+      "name": "Elementary 2",
+      "lang": "en",
+      "level": "elementary2",
+      "urls": [
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/pdf/Z_L01.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/pdf/Z_L02.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/pdf/Z_L03.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/pdf/Z_L04.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/pdf/Z_L05.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/pdf/Z_L06.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/pdf/Z_L07.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/pdf/Z_L08.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/pdf/Z_L09.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/pdf/Z_L10.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/pdf/Z_L11.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/pdf/Z_L12.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/pdf/Z_L13.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/pdf/Z_L14.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/pdf/Z_L15.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/pdf/Z_L16.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/pdf/Z_L17.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/pdf/Z_L18.pdf"
+      ]
+    },
+
+    {
+      "id": "audio-elementary2",
+      "type": "audio",
+      "level": "elementary2",
+      "urls": [
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/audio/01/Z_audio_L01.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/audio/02/Z_audio_L02.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/audio/03/Z_audio_L03.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/audio/04/Z_audio_L04.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/audio/05/Z_audio_L05.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/audio/06/Z_audio_L06.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/audio/07/Z_audio_L07.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/audio/08/Z_audio_L08.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/audio/09/Z_audio_L09.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/audio/10/Z_audio_L10.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/audio/11/Z_audio_L11.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/audio/12/Z_audio_L12.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/audio/13/Z_audio_L13.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/audio/14/Z_audio_L14.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/audio/15/Z_audio_L15.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/audio/16/Z_audio_L16.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/audio/17/Z_audio_L17.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/elementary02/audio/18/Z_audio_L18.zip"
+      ]
+    },
+
+    {
+      "id": "id-elementary2",
+      "type": "pdf",
+      "name": "Dasar 2",
+      "lang": "id",
+      "level": "elementary2",
+      "urls": [
+        "https://drive.usercontent.google.com/download?&export=download&id=1dwQ0cNQ4GY74UgJShxnVbtzNMrlFEK94",
+        "https://drive.usercontent.google.com/download?&export=download&id=1gjFepcssMD6iTYouaWRgji2laW5ChWRZ",
+        "https://drive.usercontent.google.com/download?&export=download&id=1fSPvZQ2ibw5QlZlgxYEKZ4XWAivLL-Fb",
+        "https://drive.usercontent.google.com/download?&export=download&id=1_wcNM66568tZAZDI-a4OfdFaL5LAWTf5",
+        "https://drive.usercontent.google.com/download?&export=download&id=1wywAYlIGOuu8divWb_NzUVNiH5a8ILE8",
+        "https://drive.usercontent.google.com/download?&export=download&id=1L0RKrtKtfHpXK1JOne0He7i5oCnDD0di",
+        "https://drive.usercontent.google.com/download?&export=download&id=1Gdp1o_X6D8A2lYblwdUX4f5devhS80F1",
+        "https://drive.usercontent.google.com/download?&export=download&id=1H7DMCUtdM2xqjPaxRnVi4Z6-M_SSBvf5",
+        "https://drive.usercontent.google.com/download?&export=download&id=1mcUIXRFJw_ZVZy7HCMr2jW9IoO8cARVR",
+        "https://drive.usercontent.google.com/download?&export=download&id=1HvpAN58fneYbFsBpZITxS82FTkizeJXR",
+        "https://drive.usercontent.google.com/download?&export=download&id=1nvyt7yyy9bY5UhjoW-qB2aKrGuhHdFTc",
+        "https://drive.usercontent.google.com/download?&export=download&id=19S9LLC_cEM4_Ifk7GiKtKDoQoPTCFRIX",
+        "https://drive.usercontent.google.com/download?&export=download&id=1bSHGOWHVd2LXES2cR78uLE6UQvGxd0Mq",
+        "https://drive.usercontent.google.com/download?&export=download&id=1wdsY-nItxcQ8I2WTqn4h2SgFoepkuMLS",
+        "https://drive.usercontent.google.com/download?&export=download&id=1fkvlEUHIqLNEh3OR4GQ84nRwAENhJTDr",
+        "https://drive.usercontent.google.com/download?&export=download&id=1jSpJtjzJfVekz1sC-OYevN5cweXIMLoZ",
+        "https://drive.usercontent.google.com/download?&export=download&id=1r6ZLgsfamWMwijNf5m040DYelY5guMqp",
+        "https://drive.usercontent.google.com/download?&export=download&id=1LmrE21nADJTfUYMbtfo2FULx1lNEcTmU"
+      ]
+    },
+
+    {
+      "id": "en-pre-intermediate",
+      "type": "pdf",
+      "name": "Pre-Intermediate",
+      "lang": "en",
+      "level": "pre-intermediate",
+      "urls": [
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/pdf/ZZ_L01.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/pdf/ZZ_L02.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/pdf/ZZ_L03.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/pdf/ZZ_L04.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/pdf/ZZ_L05.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/pdf/ZZ_L06.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/pdf/ZZ_L07.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/pdf/ZZ_L08.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/pdf/ZZ_L09.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/pdf/ZZ_L10.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/pdf/ZZ_L11.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/pdf/ZZ_L12.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/pdf/ZZ_L13.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/pdf/ZZ_L14.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/pdf/ZZ_L15.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/pdf/ZZ_L16.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/pdf/ZZ_L17.pdf",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/pdf/ZZ_L18.pdf"
+      ]
+    },
+
+    {
+      "id": "audio-pre-intermediate",
+      "type": "audio",
+      "level": "pre-intermediate",
+      "urls": [
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/audio/01/ZZ_audio_L01.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/audio/02/ZZ_audio_L02.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/audio/03/ZZ_audio_L03.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/audio/04/ZZ_audio_L04.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/audio/05/ZZ_audio_L05.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/audio/06/ZZ_audio_L06.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/audio/07/ZZ_audio_L07.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/audio/08/ZZ_audio_L08.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/audio/09/ZZ_audio_L09.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/audio/10/ZZ_audio_L10.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/audio/11/ZZ_audio_L11.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/audio/12/ZZ_audio_L12.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/audio/13/ZZ_audio_L13.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/audio/14/ZZ_audio_L14.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/audio/15/ZZ_audio_L15.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/audio/16/ZZ_audio_L16.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/audio/17/ZZ_audio_L17.zip",
+        "https://www.irodori.jpf.go.jp/assets/data/pre-intermediate/audio/18/ZZ_audio_L18.zip"
+      ]
     }
   ]
 }
