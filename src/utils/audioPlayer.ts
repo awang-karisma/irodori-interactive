@@ -14,6 +14,7 @@ export type AudioState = {
   duration: number;
   loading: boolean;
   error: string | null;
+  downloadProgress: number; // 0-100, -1 for indeterminate
 };
 
 let state: AudioState = {
@@ -23,7 +24,8 @@ let state: AudioState = {
   currentTime: 0,
   duration: 0,
   loading: false,
-  error: null
+  error: null,
+  downloadProgress: -1
 };
 
 function notify() {
@@ -50,8 +52,38 @@ const getAudioBlobUrl = async (zipUrl: string, filename: string): Promise<string
     const fetchUrl = corsProxy ? `${corsProxy}${encodeURIComponent(zipUrl)}` : zipUrl;
     const response = await fetch(fetchUrl);
     if (!response.ok) throw new Error(`Failed to download audio zip: ${response.status}`);
-    zipBlob = await response.blob();
+
+    const contentLength = response.headers.get('Content-Length');
+    const total = contentLength ? parseInt(contentLength, 10) : null;
+    state.downloadProgress = 0;
+    notify();
+
+    if (total) {
+      const reader = response.body!.getReader();
+      const chunks: Uint8Array[] = [];
+      let received = 0;
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        chunks.push(value);
+        received += value.length;
+        state.downloadProgress = Math.round((received / total) * 100);
+        notify();
+      }
+
+      const blob = new Blob(chunks as BlobPart[]);
+      zipBlob = blob;
+    } else {
+      // Indeterminate progress
+      state.downloadProgress = -1;
+      notify();
+      zipBlob = await response.blob();
+    }
+
     await storeAsset(zipCacheKey, zipBlob);
+    state.downloadProgress = -1; // Reset after storing
+    notify();
   }
 
   const zip = await JSZip.loadAsync(zipBlob);
@@ -186,7 +218,8 @@ export function stop() {
     currentTime: 0,
     duration: 0,
     loading: false,
-    error: null
+    error: null,
+    downloadProgress: -1
   };
 
   notify();

@@ -17,10 +17,11 @@ export default function PdfViewer(props: {
   let container!: HTMLDivElement;
   const [isLoading, setIsLoading] = createSignal(false);
   const [error, setError] = createSignal<string | null>(null);
+  const [pdfDownloadProgress, setPdfDownloadProgress] = createSignal(-1); // -1 indeterminate, 0-100
 
   let renderId = 0; // prevent race condition
 
-  const getPdfBlob = async (url: string): Promise<Blob> => {
+  const getPdfBlob = async (url: string, onProgress?: (progress: number) => void): Promise<Blob> => {
     const cacheKey = `pdf-${btoa(url)}`; // Simple cache key from URL
     const cached = await getAsset(cacheKey);
     if (cached) return cached;
@@ -30,9 +31,39 @@ export default function PdfViewer(props: {
     const fetchUrl = corsProxy ? `${corsProxy}${encodeURIComponent(url)}` : url;
     const response = await fetch(fetchUrl);
     if (!response.ok) throw new Error(`Failed to download PDF: ${response.status}`);
-    const blob = await response.blob();
-    await storeAsset(cacheKey, blob);
-    return blob;
+
+    const contentLength = response.headers.get('Content-Length');
+    const total = contentLength ? parseInt(contentLength, 10) : null;
+
+    if (onProgress) {
+      if (total) {
+        const reader = response.body!.getReader();
+        const chunks: Uint8Array[] = [];
+        let received = 0;
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          chunks.push(value);
+          received += value.length;
+          onProgress(Math.round((received / total) * 100));
+        }
+
+        const blob = new Blob(chunks);
+        await storeAsset(cacheKey, blob);
+        return blob;
+      } else {
+        // Indeterminate
+        onProgress(-1);
+        const blob = await response.blob();
+        await storeAsset(cacheKey, blob);
+        return blob;
+      }
+    } else {
+      const blob = await response.blob();
+      await storeAsset(cacheKey, blob);
+      return blob;
+    }
   };
 
   createEffect(() => {
@@ -40,6 +71,7 @@ export default function PdfViewer(props: {
 
     async function render() {
       setError(null);
+      setPdfDownloadProgress(-1);
 
       // Wait for container to be visible and have dimensions
       let containerWidth = container.clientWidth;
@@ -58,7 +90,9 @@ export default function PdfViewer(props: {
         // clear previous content
         container.innerHTML = "";
 
-        const pdfBlob = await getPdfBlob(props.pdfUrl);
+        const pdfBlob = await getPdfBlob(props.pdfUrl, (progress) => {
+          setPdfDownloadProgress(progress);
+        });
         const pdfUrl = URL.createObjectURL(pdfBlob);
 
         try {
@@ -115,11 +149,11 @@ export default function PdfViewer(props: {
             filteredAnchors.forEach(anchor => {
               const rect = toViewportRect(viewport, anchor);
 
-            drawHitBox(
-              overlay,
-              rect,
-              () => play(props.mapping.audio[anchor.id], anchor.id, props.zipUrl)
-            );
+              drawHitBox(
+                overlay,
+                rect,
+                () => play(props.mapping.audio[anchor.id], anchor.id, props.zipUrl)
+              );
             });
           }
         } finally {
@@ -141,7 +175,15 @@ export default function PdfViewer(props: {
       {isLoading() && (
         <div class="text-center p-5">
           <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-          <p class="mt-2">{m.loading_pdf()}</p>
+          <p class="mt-2">{pdfDownloadProgress() >= 0 ? m.downloading_pdf() : m.loading_pdf()}</p>
+          {pdfDownloadProgress() >= 0 && (
+            <div class="mt-2 w-64 mx-auto">
+              <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div class="bg-blue-600 h-2.5 rounded-full" style={{ width: `${pdfDownloadProgress()}%` }}></div>
+              </div>
+              <p class="mt-1 text-sm">{pdfDownloadProgress()}%</p>
+            </div>
+          )}
         </div>
       )}
       {error() && (

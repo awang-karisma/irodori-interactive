@@ -11,5 +11,8 @@
   "loading": "Loading...",
   "loading_pdf": "Loading PDF...",
   "retry": "Retry",
-  "language_name": "English"
+  "language_name": "English",
+  "downloading_pdf": "Downloading PDF...",
+  "downloading": "Downloading...",
+  "no_audio": "No Audio"
 }

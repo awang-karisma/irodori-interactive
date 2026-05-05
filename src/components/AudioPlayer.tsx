@@ -3,6 +3,7 @@ import { subscribe, seek, stop, pause, resume } from "../utils/audioPlayer";
 import IconMdiPlay from 'virtual:icons/mdi/play';
 import IconMdiPause from 'virtual:icons/mdi/pause';
 import IconMdiStop from 'virtual:icons/mdi/stop';
+import { m } from "../i18n/messages";
 
 export default function AudioPlayer() {
   const [state, setState] = createSignal({
@@ -12,7 +13,8 @@ export default function AudioPlayer() {
     duration: 0,
     playing: false,
     loading: false,
-    error: null as string | null
+    error: null as string | null,
+    downloadProgress: -1
   });
 
   let seekbar!: HTMLDivElement;
@@ -103,7 +105,7 @@ export default function AudioPlayer() {
     <div class="fixed bottom-0 left-0 w-full h-15 bg-gray-200 flex items-center px-5 box-border z-[1000] gap-2.5">
       {/* Title */}
       <div class="font-bold min-w-25">
-        {state().loading ? "Loading..." : state().error ? `Error: ${state().error}` : state().title ?? "No audio"}
+        {state().loading ? (state().downloadProgress >= 0 ? `${m.downloading()} ${state().downloadProgress}%` : m.loading()) : state().error ? `${m.error()}: ${state().error}` : state().title ?? m.no_audio()}
       </div>
 
       {/* Controls */}
