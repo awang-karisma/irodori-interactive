@@ -4,7 +4,7 @@ import { extractAnchors } from "../utils/extractAnchors";
 import { toViewportRect } from "../utils/viewport";
 import { drawHitBox } from "../utils/overlay";
 import { play } from "../utils/audioPlayer";
-import { getAsset, storeAsset } from "../utils/idb";
+import { fetchWithCache } from "../utils/fetchWithCache";
 import { m } from "../i18n/messages";
 
 export default function PdfViewer(props: {
@@ -20,51 +20,6 @@ export default function PdfViewer(props: {
   const [pdfDownloadProgress, setPdfDownloadProgress] = createSignal(-1); // -1 indeterminate, 0-100
 
   let renderId = 0; // prevent race condition
-
-  const getPdfBlob = async (url: string, onProgress?: (progress: number) => void): Promise<Blob> => {
-    const cacheKey = `pdf-${btoa(url)}`; // Simple cache key from URL
-    const cached = await getAsset(cacheKey);
-    if (cached) return cached;
-
-    // Use CORS proxy if configured
-    const corsProxy = import.meta.env.VITE_CORS_PROXY;
-    const fetchUrl = corsProxy ? `${corsProxy}${encodeURIComponent(url)}` : url;
-    const response = await fetch(fetchUrl);
-    if (!response.ok) throw new Error(`Failed to download PDF: ${response.status}`);
-
-    const contentLength = response.headers.get('Content-Length');
-    const total = contentLength ? parseInt(contentLength, 10) : null;
-
-    if (onProgress) {
-      if (total) {
-        const reader = response.body!.getReader();
-        const chunks: Uint8Array[] = [];
-        let received = 0;
-
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          chunks.push(value);
-          received += value.length;
-          onProgress(Math.round((received / total) * 100));
-        }
-
-        const blob = new Blob(chunks);
-        await storeAsset(cacheKey, blob);
-        return blob;
-      } else {
-        // Indeterminate
-        onProgress(-1);
-        const blob = await response.blob();
-        await storeAsset(cacheKey, blob);
-        return blob;
-      }
-    } else {
-      const blob = await response.blob();
-      await storeAsset(cacheKey, blob);
-      return blob;
-    }
-  };
 
   createEffect(() => {
     const currentRender = ++renderId;
@@ -90,8 +45,9 @@ export default function PdfViewer(props: {
         // clear previous content
         container.innerHTML = "";
 
-        const pdfBlob = await getPdfBlob(props.pdfUrl, (progress) => {
-          setPdfDownloadProgress(progress);
+        const cacheKey = `pdf-${btoa(props.pdfUrl)}`;
+        const pdfBlob = await fetchWithCache(props.pdfUrl, cacheKey, (p) => {
+          setPdfDownloadProgress(p.progress);
         });
         const pdfUrl = URL.createObjectURL(pdfBlob);
 

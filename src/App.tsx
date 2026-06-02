@@ -3,6 +3,7 @@ import { Router, Route, useParams, useNavigate } from "@solidjs/router";
 import TopBar from "./components/TopBar";
 import Home from "./pages/Home";
 import Viewer from "./pages/Viewer";
+import Settings from "./pages/Settings";
 import { getPdfUrl, getAudioZipUrl, getAudioMapping } from "./utils/assetUtils";
 import { requestPersistentStorage } from "./utils/idb";
 import { baseLocale, isLocale, getLocale, setLocale } from "./i18n/runtime";
@@ -78,6 +79,7 @@ export default function App() {
         <Route path="/" component={DefaultRedirect} />
         <Route path="/:lang" component={DefaultRedirect} />
         <Route path="/:lang/home" component={() => <HomeRoute assetsData={assetsData()!} />} />
+        <Route path="/:lang/settings" component={() => <SettingsRoute assetsData={assetsData()!} />} />
         <Route path="/:lang/viewer/:level/:chapter" component={() => <ViewerRoute assetsData={assetsData()!} />} />
       </Show>
     </Router>
@@ -98,6 +100,19 @@ function HomeRoute({ assetsData }: { assetsData: AssetsUrlsData }) {
     <>
       <TopBar lang={params.lang} chapter={null} />
       <Home assets={assetsData.assets} onSelectChapter={handleSelectChapter} />
+    </>
+  );
+}
+
+function SettingsRoute({ assetsData }: { assetsData: AssetsUrlsData }) {
+  const params = useParams<{ lang: string }>();
+
+  defaultLocale(params.lang);
+
+  return (
+    <>
+      <TopBar lang={params.lang} chapter={null} />
+      <Settings assets={assetsData.assets} languages={assetsData.languages} />
     </>
   );
 }

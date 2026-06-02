@@ -14,5 +14,19 @@
   "language_name": "English",
   "downloading_pdf": "Downloading PDF...",
   "downloading": "Downloading...",
-  "no_audio": "No Audio"
+  "no_audio": "No Audio",
+  "settings": "Settings",
+  "storage_usage": "Storage Usage",
+  "storage_used": "Used",
+  "storage_free": "Free",
+  "clear_cache": "Clear Cache",
+  "clear_cache_confirm": "Are you sure you want to clear all cached data?",
+  "preload": "Preload",
+  "preload_all": "Preload All",
+  "preload_language": "Preload Language",
+  "preloading": "Preloading...",
+  "preload_complete": "Preload complete",
+  "cached": "Cached",
+  "cache_cleared": "Cache cleared",
+  "preload_chapter_progress": "Preloading chapter {chapter}"
 }

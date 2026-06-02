@@ -1,6 +1,6 @@
-// src/utils/audioPlayer.ts
 import JSZip from 'jszip';
 import { getAsset, storeAsset } from './idb';
+import { fetchWithCache } from './fetchWithCache';
 
 let audio: HTMLAudioElement | null = null;
 
@@ -43,46 +43,18 @@ const getAudioBlobUrl = async (zipUrl: string, filename: string): Promise<string
     return URL.createObjectURL(cached);
   }
 
-  // Download and extract from zip
   const zipCacheKey = `zip-${btoa(zipUrl)}`;
   let zipBlob = await getAsset(zipCacheKey);
   if (!zipBlob) {
-    // Use CORS proxy if configured
-    const corsProxy = import.meta.env.VITE_CORS_PROXY;
-    const fetchUrl = corsProxy ? `${corsProxy}${encodeURIComponent(zipUrl)}` : zipUrl;
-    const response = await fetch(fetchUrl);
-    if (!response.ok) throw new Error(`Failed to download audio zip: ${response.status}`);
-
-    const contentLength = response.headers.get('Content-Length');
-    const total = contentLength ? parseInt(contentLength, 10) : null;
     state.downloadProgress = 0;
     notify();
 
-    if (total) {
-      const reader = response.body!.getReader();
-      const chunks: Uint8Array[] = [];
-      let received = 0;
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        chunks.push(value);
-        received += value.length;
-        state.downloadProgress = Math.round((received / total) * 100);
-        notify();
-      }
-
-      const blob = new Blob(chunks as BlobPart[]);
-      zipBlob = blob;
-    } else {
-      // Indeterminate progress
-      state.downloadProgress = -1;
+    zipBlob = await fetchWithCache(zipUrl, zipCacheKey, (p) => {
+      state.downloadProgress = p.progress;
       notify();
-      zipBlob = await response.blob();
-    }
+    });
 
-    await storeAsset(zipCacheKey, zipBlob);
-    state.downloadProgress = -1; // Reset after storing
+    state.downloadProgress = -1;
     notify();
   }
 

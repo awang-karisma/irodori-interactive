@@ -11,5 +11,19 @@
   "retry": "Mencoba kembali",
   "language_name": "Bahasa Indonesia",
   "asset_no_url_found_title": "URL Aset Tidak Ditemukan",
-  "asset_no_url_found_message": "Tidak dapat memuat URL aset dari assets_urls.json"
+  "asset_no_url_found_message": "Tidak dapat memuat URL aset dari assets_urls.json",
+  "settings": "Pengaturan",
+  "storage_usage": "Penggunaan Penyimpanan",
+  "storage_used": "Terpakai",
+  "storage_free": "Tersedia",
+  "clear_cache": "Hapus Cache",
+  "clear_cache_confirm": "Apakah Anda yakin ingin menghapus semua data cache?",
+  "preload": "Unduh Awal",
+  "preload_all": "Unduh Semua",
+  "preload_language": "Bahasa Unduhan Awal",
+  "preloading": "Mengunduh awal...",
+  "preload_complete": "Unduhan awal selesai",
+  "cached": "Tersimpan",
+  "cache_cleared": "Cache dihapus",
+  "preload_chapter_progress": "Mengunduh awal bab {chapter}"
 }
