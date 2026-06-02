@@ -5,16 +5,13 @@ import Home from "./pages/Home";
 import Viewer from "./pages/Viewer";
 import { getPdfUrl, getAudioZipUrl, getAudioMapping } from "./utils/assetUtils";
 import { requestPersistentStorage } from "./utils/idb";
-import { baseLocale, getLocale, isLocale, setLocale, shouldRedirect } from "./i18n/runtime";
+import { baseLocale, isLocale, getLocale, setLocale } from "./i18n/runtime";
 import { m } from "./i18n/messages";
 
-async function checkRedirect() {
-	const decision = await shouldRedirect({ url: window.location.href });
+// Patch getLocale so it understands non-root base paths.
+// Must be imported before any component calls getLocale().
+import "./utils/localeOverride";
 
-	if (decision.shouldRedirect && decision.redirectUrl) {
-		window.location.href = decision.redirectUrl.href;
-	}
-}
 interface Language {
   id: string;
   name: string;
@@ -42,14 +39,13 @@ function DefaultRedirect() {
 
 const defaultLocale = (currentLocale: string) => {
   if (isLocale(currentLocale)) {
-    return setLocale(currentLocale)
+    return setLocale(currentLocale, { reload: false })
   }
-  return setLocale(baseLocale)
+  return setLocale(baseLocale, { reload: false })
 }
 
 export default function App() {
   onMount(async () => {
-    checkRedirect()
     // Request persistent storage for better caching
     const granted = await requestPersistentStorage();
     if (granted) {
