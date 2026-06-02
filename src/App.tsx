@@ -4,6 +4,7 @@ import TopBar from "./components/TopBar";
 import Home from "./pages/Home";
 import Viewer from "./pages/Viewer";
 import Settings from "./pages/Settings";
+import ReloadPrompt from "./components/ReloadPrompt";
 import { getPdfUrl, getAudioZipUrl, getAudioMapping } from "./utils/assetUtils";
 import { requestPersistentStorage } from "./utils/idb";
 import { baseLocale, isLocale, getLocale, setLocale } from "./i18n/runtime";
@@ -65,6 +66,7 @@ export default function App() {
 
   return (
     <Router base={import.meta.env.BASE_URL === '/' ? '/' : import.meta.env.BASE_URL.replace(/\/$/, '')}>
+      <ReloadPrompt />
       <Show when={assetsData.state === 'pending'}>
         <div class="text-center p-5">{m.loading()}</div>
       </Show>
