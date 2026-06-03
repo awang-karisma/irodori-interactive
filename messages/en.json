@@ -28,5 +28,6 @@
   "preload_complete": "Preload complete",
   "cached": "Cached",
   "cache_cleared": "Cache cleared",
-  "preload_chapter_progress": "Preloading chapter {chapter}"
+  "preload_chapter_progress": "Preloading chapter {chapter}",
+  "concurrent_downloads": "Concurrent downloads"
 }

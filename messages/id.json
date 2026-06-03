@@ -25,5 +25,9 @@
   "preload_complete": "Unduhan awal selesai",
   "cached": "Tersimpan",
   "cache_cleared": "Cache dihapus",
-  "preload_chapter_progress": "Mengunduh awal bab {chapter}"
+  "preload_chapter_progress": "Mengunduh awal bab {chapter}",
+  "concurrent_downloads": "Unduhan bersamaan",
+  "downloading_pdf": "Mengunduh PDF...",
+  "downloading": "Sedang mengunduh...",
+  "no_audio": "Tidak ada suara"
 }

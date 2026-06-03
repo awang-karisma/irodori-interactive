@@ -3,11 +3,12 @@ import { m } from "../i18n/messages";
 import { baseLocale, getLocale, isLocale, locales } from "../i18n/runtime";
 import { getStorageEstimate, clearCache, hasAsset } from "../utils/idb";
 import { getPdfUrl, getAudioZipUrl } from "../utils/assetUtils";
-import { preloadChapter } from "../utils/preload";
+import { preloadChapter, preloadChapters } from "../utils/preload";
 import type { PreloadProgress } from "../utils/preload";
 import IconMdiDownload from 'virtual:icons/mdi/download';
 import IconMdiCheckCircle from 'virtual:icons/mdi/check-circle';
 import IconMdiAlertCircle from 'virtual:icons/mdi/alert-circle';
+import IconMdiClose from 'virtual:icons/mdi/close';
 
 interface SettingsProps {
   assets: any[];
@@ -29,6 +30,13 @@ export default function Settings(props: SettingsProps) {
   const [preloadStatuses, setPreloadStatuses] = createSignal<Record<string, 'idle' | 'loading' | 'done' | 'error'>>({});
   const [preloadProgress, setPreloadProgress] = createSignal<Record<string, PreloadProgress>>({});
   const [downloadStatuses, setDownloadStatuses] = createSignal(new Map<string, boolean>());
+  const [concurrency, setConcurrency] = createSignal(Number(localStorage.getItem('preload_concurrency') || '3'));
+  const [abortController, setAbortController] = createSignal<AbortController | null>(null);
+
+  const updateConcurrency = (value: number) => {
+    setConcurrency(value);
+    localStorage.setItem('preload_concurrency', String(value));
+  };
 
   const refreshStorage = () => {
     getStorageEstimate().then(setStorageEstimate);
@@ -169,18 +177,81 @@ export default function Settings(props: SettingsProps) {
     const toPreload = [...selectedChapters()].filter(key => {
       const [level, ch] = key.split('-');
       return preloadStatuses()[key] !== 'loading' && !isChapterCached(level, parseInt(ch), lang);
+    }).map(key => {
+      const [level, ch] = key.split('-');
+      return { key, level, lang, chapter: parseInt(ch) };
     });
 
+    if (toPreload.length === 0) return;
+
     setOverallProgress({ completed: 0, total: toPreload.length });
+    const controller = new AbortController();
+    setAbortController(controller);
 
-    for (const key of toPreload) {
-      const [level, ch] = key.split('-');
-      await handlePreloadChapter(level, parseInt(ch), lang);
-      setOverallProgress(prev => ({ ...prev, completed: prev.completed + 1 }));
+    const doneKeys = new Set<string>();
+
+    try {
+      await preloadChapters(
+        props.assets,
+        toPreload,
+        { concurrency: concurrency(), signal: controller.signal },
+        (key, state, progress) => {
+          if (state === 'loading') {
+            setPreloadStatuses(prev => ({ ...prev, [key]: 'loading' }));
+            if (progress) setPreloadProgress(prev => ({ ...prev, [key]: progress }));
+          } else if (state === 'done' || state === 'error') {
+            setPreloadStatuses(prev => ({ ...prev, [key]: state }));
+            if (!doneKeys.has(key)) {
+              doneKeys.add(key);
+              setOverallProgress(prev => prev ? { ...prev, completed: prev.completed + 1 } : null);
+              if (state === 'done') {
+                const [level, ch] = key.split('-');
+                const chapter = parseInt(ch);
+                const pdfUrl = getPdfUrl(props.assets, level, lang, chapter);
+                const zipUrl = getAudioZipUrl(props.assets, level, chapter);
+                setDownloadStatuses(prev => {
+                  const newMap = new Map(prev);
+                  if (pdfUrl) newMap.set(`${key}-pdf`, true);
+                  if (zipUrl) newMap.set(`${key}-audio`, true);
+                  return newMap;
+                });
+              }
+            }
+          }
+        },
+      );
+    } finally {
+      setAbortController(null);
+      setPreloadProgress({});
+      refreshStorage();
+
+      // Clear selection for items that actually finished (done or error)
+      setSelectedChapters(prev => {
+        const next = new Set(prev);
+        for (const key of doneKeys) {
+          next.delete(key);
+        }
+        return next;
+      });
+
+      // Reset any statuses still 'loading' (aborted) back to idle
+      setPreloadStatuses(prev => {
+        const next = { ...prev };
+        for (const key in next) {
+          if (next[key] === 'loading') {
+            delete next[key];
+          }
+        }
+        return next;
+      });
+
+      setTimeout(() => setOverallProgress(null), 1000);
     }
+  };
 
-    setSelectedChapters(new Set<string>());
-    setTimeout(() => setOverallProgress(null), 1000);
+  const handleCancelPreload = () => {
+    abortController()?.abort();
+    setAbortController(null);
   };
 
   const usage = () => storageEstimate()?.usage ?? 0;
@@ -222,6 +293,18 @@ export default function Settings(props: SettingsProps) {
 
       <section class="bg-white dark:bg-gray-800 rounded-lg p-5 shadow">
         <h2 class="text-xl font-semibold mb-4">{m.preload()}</h2>
+
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-1">{m.concurrent_downloads()}: <span class="font-bold">{concurrency()}</span></label>
+          <input
+            type="range"
+            min="1"
+            max="10"
+            value={concurrency()}
+            onInput={(e) => updateConcurrency(Number((e.target as HTMLInputElement).value))}
+            class="w-full accent-blue-500"
+          />
+        </div>
 
         <div class="mb-4">
           <label class="block text-sm font-medium mb-1">{m.preload_language()}</label>
@@ -341,14 +424,24 @@ export default function Settings(props: SettingsProps) {
                     {`${overallProgress()!.completed}/${overallProgress()!.total} ${m.preloading().toLowerCase()}`}
                   </Show>
                 </span>
-                <button
-                  class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition flex items-center gap-2 disabled:opacity-50"
-                  onClick={handlePreloadSelected}
-                  disabled={isAnyLoading()}
-                >
-                  <IconMdiDownload class="w-5 h-5" />
-                  {m.preload()} ({selectedChapters().size})
-                </button>
+                <Show when={isAnyLoading()} fallback={
+                  <button
+                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition flex items-center gap-2 disabled:opacity-50"
+                    onClick={handlePreloadSelected}
+                    disabled={isAnyLoading()}
+                  >
+                    <IconMdiDownload class="w-5 h-5" />
+                    {m.preload()} ({selectedChapters().size})
+                  </button>
+                }>
+                  <button
+                    class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition flex items-center gap-2"
+                    onClick={handleCancelPreload}
+                  >
+                    <IconMdiClose class="w-5 h-5" />
+                    Cancel
+                  </button>
+                </Show>
               </div>
             </div>
           </Show>

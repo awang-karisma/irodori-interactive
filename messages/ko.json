@@ -25,5 +25,9 @@
 	"preload_complete": "미리 로드 완료",
 	"cached": "캐시됨",
 	"cache_cleared": "캐시가 지워짐",
-	"preload_chapter_progress": "{chapter}장 미리 로드 중"
+	"preload_chapter_progress": "{chapter}장 미리 로드 중",
+	"concurrent_downloads": "동시 다운로드",
+	"downloading_pdf": "PDF 다운로드 중...",
+	"downloading": "다운로드 중...",
+	"no_audio": "오디오 없음"
 }

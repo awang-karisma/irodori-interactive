@@ -9,14 +9,17 @@ export async function fetchWithCache(
   url: string,
   cacheKey: string,
   onProgress?: (p: FetchWithCacheProgress) => void,
+  signal?: AbortSignal,
 ): Promise<Blob> {
+  if (signal?.aborted) throw new DOMException('The operation was aborted.', 'AbortError');
+
   const cached = await getAsset(cacheKey);
   if (cached) return cached;
 
   const corsProxy = import.meta.env.VITE_CORS_PROXY;
   const fetchUrl = corsProxy ? `${corsProxy}${encodeURIComponent(url)}` : url;
 
-  const response = await fetch(fetchUrl);
+  const response = await fetch(fetchUrl, { signal });
   if (!response.ok) throw new Error(`Failed to fetch ${url}: ${response.status}`);
 
   const contentLength = response.headers.get('Content-Length');
