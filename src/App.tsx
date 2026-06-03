@@ -5,7 +5,7 @@ import Home from "./pages/Home";
 import Viewer from "./pages/Viewer";
 import Settings from "./pages/Settings";
 import ReloadPrompt from "./components/ReloadPrompt";
-import { getPdfUrl, getAudioZipUrl, getAudioMapping } from "./utils/assetUtils";
+import { getPdfUrl, getAudioZipUrl, getAudioMapping, getPdfSignature, getAudioSignature } from "./utils/assetUtils";
 import { requestPersistentStorage } from "./utils/idb";
 import { baseLocale, isLocale, getLocale, setLocale } from "./i18n/runtime";
 import { m } from "./i18n/messages";
@@ -26,6 +26,7 @@ interface AssetEntry {
   lang?: string;
   name?: string;
   urls: string[];
+  signatures?: string[];
 }
 
 interface AssetsUrlsData {
@@ -127,6 +128,8 @@ function ViewerRoute({ assetsData }: { assetsData: AssetsUrlsData }) {
 
   const pdfUrl = getPdfUrl(assetsData.assets, params.level, params.lang, parseInt(params.chapter))!;
   const zipUrl = getAudioZipUrl(assetsData.assets, params.level, parseInt(params.chapter))!;
+  const pdfSignature = getPdfSignature(assetsData.assets, params.level, params.lang, parseInt(params.chapter)) || undefined;
+  const zipSignature = getAudioSignature(assetsData.assets, params.level, parseInt(params.chapter)) || undefined;
   const audioMapping = getAudioMapping(parseInt(params.chapter));
 
   const handleBack = () => {
@@ -136,7 +139,7 @@ function ViewerRoute({ assetsData }: { assetsData: AssetsUrlsData }) {
   return (
     <>
       <TopBar lang={params.lang} chapter={params.chapter} onBack={handleBack} />
-      <Viewer pdfUrl={pdfUrl} chapter={params.chapter} level={params.level} zipUrl={zipUrl} mapping={{ audio: audioMapping }} />
+      <Viewer pdfUrl={pdfUrl} pdfSignature={pdfSignature} chapter={params.chapter} level={params.level} zipUrl={zipUrl} zipSignature={zipSignature} mapping={{ audio: audioMapping }} />
     </>
   );
 }

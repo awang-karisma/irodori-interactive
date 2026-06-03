@@ -22,6 +22,8 @@ export async function preloadChapter(
   chapter: number,
   onProgress?: (p: PreloadProgress) => void,
   signal?: AbortSignal,
+  pdfSignature?: string,
+  zipSignature?: string,
 ): Promise<void> {
   const pdfUrl = getPdfUrl(assets, level, lang, chapter);
   const zipUrl = getAudioZipUrl(assets, level, chapter);
@@ -36,7 +38,7 @@ export async function preloadChapter(
         overall = Math.round(p.progress * 0.5);
       }
       onProgress?.({ phase: 'pdf', progress: overall });
-    }, signal);
+    }, signal, pdfSignature);
   }
 
   if (signal?.aborted) throw new DOMException('The operation was aborted.', 'AbortError');
@@ -49,7 +51,7 @@ export async function preloadChapter(
         overall = Math.round(50 + p.progress * 0.5);
       }
       onProgress?.({ phase: 'audio', progress: overall });
-    }, signal);
+    }, signal, zipSignature);
   }
 }
 
@@ -58,6 +60,8 @@ export type PreloadItem = {
   level: string;
   lang: string;
   chapter: number;
+  pdfSignature?: string;
+  zipSignature?: string;
 };
 
 export type PreloadItemState = 'loading' | 'done' | 'error';
@@ -88,6 +92,8 @@ export async function preloadChapters(
           item.chapter,
           (p) => onItemUpdate?.(item.key, 'loading', p),
           options.signal,
+          item.pdfSignature,
+          item.zipSignature,
         );
         onItemUpdate?.(item.key, 'done');
       } catch (err) {

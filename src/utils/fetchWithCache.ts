@@ -10,6 +10,7 @@ export async function fetchWithCache(
   cacheKey: string,
   onProgress?: (p: FetchWithCacheProgress) => void,
   signal?: AbortSignal,
+  signature?: string,
 ): Promise<Blob> {
   if (signal?.aborted) throw new DOMException('The operation was aborted.', 'AbortError');
 
@@ -17,7 +18,15 @@ export async function fetchWithCache(
   if (cached) return cached;
 
   const corsProxy = import.meta.env.VITE_CORS_PROXY;
-  const fetchUrl = corsProxy ? `${corsProxy}${encodeURIComponent(url)}` : url;
+  let fetchUrl = url;
+  if (corsProxy) {
+    const proxyUrl = new URL(corsProxy);
+    proxyUrl.searchParams.set('url', url);
+    if (signature) {
+      proxyUrl.searchParams.set('sig', signature);
+    }
+    fetchUrl = proxyUrl.toString();
+  }
 
   const response = await fetch(fetchUrl, { signal });
   if (!response.ok) throw new Error(`Failed to fetch ${url}: ${response.status}`);

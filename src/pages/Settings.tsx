@@ -2,7 +2,7 @@ import { createSignal, createEffect, createMemo, For, Show } from "solid-js";
 import { m } from "../i18n/messages";
 import { baseLocale, getLocale, isLocale, locales } from "../i18n/runtime";
 import { getStorageEstimate, clearCache, hasAsset } from "../utils/idb";
-import { getPdfUrl, getAudioZipUrl } from "../utils/assetUtils";
+import { getPdfUrl, getAudioZipUrl, getPdfSignature, getAudioSignature } from "../utils/assetUtils";
 import { preloadChapter, preloadChapters } from "../utils/preload";
 import type { PreloadProgress } from "../utils/preload";
 import IconMdiDownload from 'virtual:icons/mdi/download';
@@ -114,9 +114,11 @@ export default function Settings(props: SettingsProps) {
     setPreloadStatuses(prev => ({ ...prev, [key]: 'loading' }));
 
     try {
+      const pdfSignature = getPdfSignature(props.assets, level, lang, chapter) || undefined;
+      const zipSignature = getAudioSignature(props.assets, level, chapter) || undefined;
       await preloadChapter(props.assets, level, lang, chapter, (p) => {
         setPreloadProgress(prev => ({ ...prev, [key]: p }));
-      });
+      }, undefined, pdfSignature, zipSignature);
       setPreloadStatuses(prev => ({ ...prev, [key]: 'done' }));
       refreshStorage();
       const pdfUrl = getPdfUrl(props.assets, level, lang, chapter);
@@ -179,7 +181,15 @@ export default function Settings(props: SettingsProps) {
       return preloadStatuses()[key] !== 'loading' && !isChapterCached(level, parseInt(ch), lang);
     }).map(key => {
       const [level, ch] = key.split('-');
-      return { key, level, lang, chapter: parseInt(ch) };
+      const chapter = parseInt(ch);
+      return {
+        key,
+        level,
+        lang,
+        chapter,
+        pdfSignature: getPdfSignature(props.assets, level, lang, chapter) || undefined,
+        zipSignature: getAudioSignature(props.assets, level, chapter) || undefined,
+      };
     });
 
     if (toPreload.length === 0) return;

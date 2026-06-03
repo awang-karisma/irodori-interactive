@@ -36,7 +36,7 @@ export function subscribe(fn: (s: AudioState) => void) {
   listeners.push(fn);
 }
 
-const getAudioBlobUrl = async (zipUrl: string, filename: string): Promise<string> => {
+const getAudioBlobUrl = async (zipUrl: string, filename: string, zipSignature?: string): Promise<string> => {
   const cacheKey = `audio-${btoa(zipUrl)}-${filename}`;
   const cached = await getAsset(cacheKey);
   if (cached) {
@@ -52,7 +52,7 @@ const getAudioBlobUrl = async (zipUrl: string, filename: string): Promise<string
     zipBlob = await fetchWithCache(zipUrl, zipCacheKey, (p) => {
       state.downloadProgress = p.progress;
       notify();
-    });
+    }, undefined, zipSignature);
 
     state.downloadProgress = -1;
     notify();
@@ -79,7 +79,7 @@ const getAudioBlobUrl = async (zipUrl: string, filename: string): Promise<string
   return URL.createObjectURL(mp3Blob);
 };
 
-export function play(url: string, title: string, zipUrl?: string) {
+export function play(url: string, title: string, zipUrl?: string, zipSignature?: string) {
   if (audio) {
     audio.pause();
   }
@@ -90,7 +90,7 @@ export function play(url: string, title: string, zipUrl?: string) {
 
   // If zipUrl provided, extract from zip
   if (zipUrl) {
-    getAudioBlobUrl(zipUrl, url).then(blobUrl => {
+    getAudioBlobUrl(zipUrl, url, zipSignature).then(blobUrl => {
       audio = new Audio(blobUrl);
 
       state.id = title;

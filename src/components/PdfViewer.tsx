@@ -9,9 +9,11 @@ import { m } from "../i18n/messages";
 
 export default function PdfViewer(props: {
   pdfUrl: string;
+  pdfSignature?: string;
   chapter: string;
   level: string;
   zipUrl: string;
+  zipSignature?: string;
   mapping: any;
 }) {
   let container!: HTMLDivElement;
@@ -48,7 +50,7 @@ export default function PdfViewer(props: {
         const cacheKey = `pdf-${btoa(props.pdfUrl)}`;
         const pdfBlob = await fetchWithCache(props.pdfUrl, cacheKey, (p) => {
           setPdfDownloadProgress(p.progress);
-        });
+        }, undefined, props.pdfSignature);
         const pdfUrl = URL.createObjectURL(pdfBlob);
 
         try {
@@ -114,7 +116,7 @@ export default function PdfViewer(props: {
               drawHitBox(
                 overlay,
                 rect,
-                () => play(props.mapping.audio[anchor.id], anchor.id, props.zipUrl)
+                () => play(props.mapping.audio[anchor.id], anchor.id, props.zipUrl, props.zipSignature)
               );
             });
           }

@@ -5,6 +5,7 @@ interface AssetEntry {
   lang?: string;
   name?: string;
   urls: string[];
+  signatures?: string[];
 }
 
 export function getPdfUrl(assets: AssetEntry[], level: string, lang: string, chapter: number): string | null {
@@ -17,6 +18,18 @@ export function getAudioZipUrl(assets: AssetEntry[], level: string, chapter: num
   const audioAsset = assets.find(a => a.type === 'audio' && a.level === level);
   if (!audioAsset || chapter < 1 || chapter > audioAsset.urls.length) return null;
   return audioAsset.urls[chapter - 1]; // 0-indexed array, 1-indexed chapters
+}
+
+export function getPdfSignature(assets: AssetEntry[], level: string, lang: string, chapter: number): string | null {
+  const pdfAsset = assets.find(a => a.type === 'pdf' && a.level === level && a.lang === lang);
+  if (!pdfAsset || chapter < 1 || chapter > (pdfAsset.signatures?.length ?? 0)) return null;
+  return pdfAsset.signatures![chapter - 1];
+}
+
+export function getAudioSignature(assets: AssetEntry[], level: string, chapter: number): string | null {
+  const audioAsset = assets.find(a => a.type === 'audio' && a.level === level);
+  if (!audioAsset || chapter < 1 || chapter > (audioAsset.signatures?.length ?? 0)) return null;
+  return audioAsset.signatures![chapter - 1];
 }
 
 export function getAudioMapping(chapter: number): Record<string, string> {
