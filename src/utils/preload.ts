@@ -24,20 +24,31 @@ export async function preloadChapter(
   signal?: AbortSignal,
 ): Promise<void> {
   const pdfUrl = getPdfUrl(assets, level, lang, chapter);
+  const zipUrl = getAudioZipUrl(assets, level, chapter);
+  const hasPdf = !!pdfUrl;
+  const hasAudio = !!zipUrl;
+
   if (pdfUrl) {
     const pdfCacheKey = `pdf-${btoa(pdfUrl)}`;
     await fetchWithCache(pdfUrl, pdfCacheKey, (p) => {
-      onProgress?.({ phase: 'pdf', progress: p.progress });
+      let overall = p.progress;
+      if (hasPdf && hasAudio && p.progress >= 0) {
+        overall = Math.round(p.progress * 0.5);
+      }
+      onProgress?.({ phase: 'pdf', progress: overall });
     }, signal);
   }
 
   if (signal?.aborted) throw new DOMException('The operation was aborted.', 'AbortError');
 
-  const zipUrl = getAudioZipUrl(assets, level, chapter);
   if (zipUrl) {
     const zipCacheKey = `zip-${btoa(zipUrl)}`;
     await fetchWithCache(zipUrl, zipCacheKey, (p) => {
-      onProgress?.({ phase: 'audio', progress: p.progress });
+      let overall = p.progress;
+      if (hasPdf && hasAudio && p.progress >= 0) {
+        overall = Math.round(50 + p.progress * 0.5);
+      }
+      onProgress?.({ phase: 'audio', progress: overall });
     }, signal);
   }
 }
