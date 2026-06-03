@@ -64,32 +64,38 @@ export default function PdfViewer(props: {
 
             const baseViewport = page.getViewport({ scale: 1 });
 
-            const scale = containerWidth / baseViewport.width;
+            const baseScale = containerWidth / baseViewport.width;
+            const DPR = 2;
 
             // Ensure scale is valid
-            if (!isFinite(scale) || scale <= 0) {
-              throw new Error(`Invalid scale: ${scale}, baseViewport.width=${baseViewport.width}`);
+            if (!isFinite(baseScale) || baseScale <= 0) {
+              throw new Error(`Invalid scale: ${baseScale}, baseViewport.width=${baseViewport.width}`);
             }
 
-            const viewport = page.getViewport({ scale });
+            const cssViewport = page.getViewport({ scale: baseScale });
+            const renderViewport = page.getViewport({ scale: baseScale * DPR });
 
             // Validate viewport dimensions
-            if (!viewport.width || !viewport.height || !isFinite(viewport.width) || !isFinite(viewport.height) || viewport.width <= 0 || viewport.height <= 0) {
-              throw new Error(`Invalid canvas size: width=${viewport.width}, height=${viewport.height}`);
+            if (!renderViewport.width || !renderViewport.height || !isFinite(renderViewport.width) || !isFinite(renderViewport.height) || renderViewport.width <= 0 || renderViewport.height <= 0) {
+              throw new Error(`Invalid canvas size: width=${renderViewport.width}, height=${renderViewport.height}`);
             }
 
             const wrapper = document.createElement("div");
             wrapper.className = "relative mb-4";
+            wrapper.style.width = `${cssViewport.width}px`;
+            wrapper.style.height = `${cssViewport.height}px`;
 
             const canvas = document.createElement("canvas");
             const ctx = canvas.getContext("2d")!;
-            canvas.width = viewport.width;
-            canvas.height = viewport.height;
+            canvas.width = renderViewport.width;
+            canvas.height = renderViewport.height;
+            canvas.style.width = `${cssViewport.width}px`;
+            canvas.style.height = `${cssViewport.height}px`;
 
             wrapper.appendChild(canvas);
             container.appendChild(wrapper);
 
-            await page.render({ canvasContext: ctx, viewport, canvas: canvas }).promise;
+            await page.render({ canvasContext: ctx, viewport: renderViewport, canvas: canvas }).promise;
 
             const overlay = document.createElement("div");
             overlay.className = "absolute left-0 top-0 w-full h-full";
@@ -103,7 +109,7 @@ export default function PdfViewer(props: {
             })
 
             filteredAnchors.forEach(anchor => {
-              const rect = toViewportRect(viewport, anchor);
+              const rect = toViewportRect(cssViewport, anchor);
 
               drawHitBox(
                 overlay,
